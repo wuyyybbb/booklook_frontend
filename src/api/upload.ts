@@ -59,6 +59,10 @@ export function getImageUrl(url: string): string {
   
   // 如果是相对路径，拼接基础 URL
   const baseURL = import.meta.env.VITE_API_BASE_URL || ''
-  return `${baseURL}${url}`
+  
+  // 移除 /api/v1 后缀，因为静态文件挂载在根路径
+  const apiBase = baseURL.replace(/\/api\/v1$/, '')
+  
+  return `${apiBase}${url}`
 }
 
