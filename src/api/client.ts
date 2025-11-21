@@ -1,7 +1,8 @@
 /**
  * HTTP 客户端封装 - 基于 Axios
  */
-import axios, { AxiosInstance, AxiosError } from 'axios'
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios'
+import { getToken } from './auth'
 
 // API 基础 URL
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
@@ -27,12 +28,13 @@ const createAxiosInstance = (): AxiosInstance => {
     },
   })
 
-  // 请求拦截器
+  // 请求拦截器 - 自动添加 token
   instance.interceptors.request.use(
-    (config) => {
-      // 从 localStorage 获取 token 并添加到请求头
-      const token = localStorage.getItem('formy_auth_token')
+    (config: InternalAxiosRequestConfig) => {
+      // 从 auth.ts 统一获取 token（使用统一的 key）
+      const token = getToken()
       if (token) {
+        // 确保 Authorization 头格式正确：Bearer <token>
         config.headers.Authorization = `Bearer ${token}`
       }
       return config
