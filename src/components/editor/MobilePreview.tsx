@@ -1,6 +1,9 @@
+import ComparisonSlider from './ComparisonSlider'
+
 interface MobilePreviewProps {
   sourceImage: string | null
   resultImage: string | null
+  comparisonImage?: string | null
   isProcessing: boolean
   progress?: number
   currentStep?: string | null
@@ -9,6 +12,7 @@ interface MobilePreviewProps {
 export default function MobilePreview({ 
   sourceImage, 
   resultImage, 
+  comparisonImage = null,
   isProcessing,
   progress = 0,
   currentStep = null
@@ -63,6 +67,11 @@ export default function MobilePreview({
                 )}
               </div>
             </div>
+          ) : comparisonImage ? (
+            // 如果有对比图片，直接显示（对比图片已经包含左右对比效果）
+            <img src={comparisonImage} alt="对比结果" className="w-full h-full object-contain" />
+          ) : resultImage && sourceImage ? (
+            <ComparisonSlider beforeImage={sourceImage} afterImage={resultImage} />
           ) : resultImage ? (
             <img src={resultImage} alt="结果" className="w-full h-full object-contain" />
           ) : (

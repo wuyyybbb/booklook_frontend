@@ -28,6 +28,7 @@ export default function Editor() {
   const [sourceImage, setSourceImage] = useState<string | null>(null)
   const [referenceImage, setReferenceImage] = useState<string | null>(null)
   const [resultImage, setResultImage] = useState<string | null>(null)
+  const [comparisonImage, setComparisonImage] = useState<string | null>(null)
   
   // 图片 file_id（用于创建任务）
   const [sourceFileId, setSourceFileId] = useState<string | null>(null)
@@ -87,13 +88,20 @@ export default function Editor() {
       setIsProcessing(false)
       setTaskStatus(TaskStatus.DONE)
       
-      // 显示结果图片
-      if (taskInfo.result?.output_image) {
+      // 优先显示对比图片（如果有）
+      if (taskInfo.result?.comparison_image) {
+        const comparisonUrl = getImageUrl(taskInfo.result.comparison_image)
+        setComparisonImage(comparisonUrl)
+        setResultImage(null) // 清空结果图片，使用对比图
+      } else if (taskInfo.result?.output_image) {
+        // 如果没有对比图片，显示结果图片
         const resultUrl = getImageUrl(taskInfo.result.output_image)
         setResultImage(resultUrl)
+        setComparisonImage(null)
       } else {
-        // 如果没有结果图片，显示原图
+        // 如果都没有，显示原图
         setResultImage(sourceImage)
+        setComparisonImage(null)
       }
     },
     onError: (taskInfo: TaskInfo) => {
@@ -217,6 +225,7 @@ export default function Editor() {
           <PreviewPanel
             sourceImage={sourceImage}
             resultImage={resultImage}
+            comparisonImage={comparisonImage}
             isProcessing={isProcessing}
             progress={progress}
             currentStep={currentStep}
@@ -231,6 +240,7 @@ export default function Editor() {
           <MobilePreview
             sourceImage={sourceImage}
             resultImage={resultImage}
+            comparisonImage={comparisonImage}
             isProcessing={isProcessing}
             progress={progress}
             currentStep={currentStep}

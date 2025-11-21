@@ -42,6 +42,7 @@ export interface CreateTaskRequest {
 export interface TaskResult {
   output_image?: string
   thumbnail?: string
+  comparison_image?: string
   metadata?: Record<string, any>
 }
 
