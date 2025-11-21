@@ -88,19 +88,18 @@ export default function Editor() {
       setIsProcessing(false)
       setTaskStatus(TaskStatus.DONE)
       
-      // 优先显示对比图片（如果有）
+      // 同时设置处理结果和对比图片
+      if (taskInfo.result?.output_image) {
+        const resultUrl = getImageUrl(taskInfo.result.output_image)
+        setResultImage(resultUrl)
+      } else {
+        setResultImage(null)
+      }
+      
       if (taskInfo.result?.comparison_image) {
         const comparisonUrl = getImageUrl(taskInfo.result.comparison_image)
         setComparisonImage(comparisonUrl)
-        setResultImage(null) // 清空结果图片，使用对比图
-      } else if (taskInfo.result?.output_image) {
-        // 如果没有对比图片，显示结果图片
-        const resultUrl = getImageUrl(taskInfo.result.output_image)
-        setResultImage(resultUrl)
-        setComparisonImage(null)
       } else {
-        // 如果都没有，显示原图
-        setResultImage(sourceImage)
         setComparisonImage(null)
       }
     },

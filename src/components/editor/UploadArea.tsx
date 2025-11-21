@@ -62,11 +62,13 @@ export default function UploadArea({ label, image, onChange, purpose = 'source' 
       
       {image ? (
         <div className="relative group">
-          <img
-            src={image}
-            alt={label}
-            className="w-full h-48 object-cover rounded-sm border border-dark-border"
-          />
+          <div className="w-full h-48 bg-dark-card rounded-sm border border-dark-border overflow-hidden flex items-center justify-center">
+            <img
+              src={image}
+              alt={label}
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
           <div className="absolute inset-0 bg-dark/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-sm flex items-center justify-center">
             <button
               onClick={() => {

@@ -1,5 +1,3 @@
-import ComparisonSlider from './ComparisonSlider'
-
 interface PreviewPanelProps {
   sourceImage: string | null
   resultImage: string | null
@@ -43,28 +41,9 @@ export default function PreviewPanel({
           )}
         </div>
 
-        {/* Before/After Comparison */}
+        {/* Results Display */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Original */}
-          <div>
-            <div className="text-sm font-medium mb-3 text-text-secondary">原图</div>
-            <div className="aspect-[3/4] bg-dark-card rounded-md border border-dark-border overflow-hidden">
-              {sourceImage ? (
-                <img src={sourceImage} alt="原图" className="w-full h-full object-contain" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-text-tertiary">
-                  <div className="text-center">
-                    <svg className="w-16 h-16 mx-auto mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <p className="text-sm">暂无图片</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Result */}
+          {/* Processing Result (output:image:1) */}
           <div>
             <div className="text-sm font-medium mb-3 text-primary">处理结果</div>
             <div className="aspect-[3/4] bg-dark-card rounded-md border border-dark-border overflow-hidden">
@@ -93,13 +72,8 @@ export default function PreviewPanel({
                     )}
                   </div>
                 </div>
-              ) : comparisonImage ? (
-                // 如果有对比图片，直接显示（对比图片已经包含左右对比效果）
-                <img src={comparisonImage} alt="对比结果" className="w-full h-full object-contain" />
-              ) : resultImage && sourceImage ? (
-                <ComparisonSlider beforeImage={sourceImage} afterImage={resultImage} />
               ) : resultImage ? (
-                <img src={resultImage} alt="结果" className="w-full h-full object-contain" />
+                <img src={resultImage} alt="处理结果" className="w-full h-full object-contain" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-text-tertiary">
                   <div className="text-center">
@@ -107,6 +81,35 @@ export default function PreviewPanel({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                     <p className="text-sm">等待生成结果</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Comparison Image (output:image_comparer:2) */}
+          <div>
+            <div className="text-sm font-medium mb-3 text-primary">对比展示</div>
+            <div className="aspect-[3/4] bg-dark-card rounded-md border border-dark-border overflow-hidden">
+              {isProcessing ? (
+                <div className="w-full h-full flex items-center justify-center text-text-tertiary">
+                  <div className="text-center">
+                    <svg className="w-16 h-16 mx-auto mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <p className="text-sm">等待生成结果</p>
+                  </div>
+                </div>
+              ) : comparisonImage ? (
+                // 对比图片（支持左右滑动查看）
+                <img src={comparisonImage} alt="对比展示" className="w-full h-full object-contain" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-text-tertiary">
+                  <div className="text-center">
+                    <svg className="w-16 h-16 mx-auto mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <p className="text-sm">等待生成对比图</p>
                   </div>
                 </div>
               )}
