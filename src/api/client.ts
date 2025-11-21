@@ -30,11 +30,11 @@ const createAxiosInstance = (): AxiosInstance => {
   // 请求拦截器
   instance.interceptors.request.use(
     (config) => {
-      // 可以在这里添加 token 等认证信息
-      // const token = localStorage.getItem('auth_token')
-      // if (token) {
-      //   config.headers.Authorization = `Bearer ${token}`
-      // }
+      // 从 localStorage 获取 token 并添加到请求头
+      const token = localStorage.getItem('formy_auth_token')
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
       return config
     },
     (error) => {
