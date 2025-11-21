@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { TaskInfo, TaskStatus, listTasks, getImageUrl } from '../../api/tasks'
+import { TaskInfo, TaskStatus, listTasks } from '../../api/tasks'
+import { getImageUrl } from '../../api/upload'
 
 interface HistorySidebarProps {
   currentMode: string
