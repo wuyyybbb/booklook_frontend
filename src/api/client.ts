@@ -59,7 +59,23 @@ const createAxiosInstance = (): AxiosInstance => {
         const { status, data } = error.response
         
         if (data && typeof data === 'object' && 'detail' in data) {
-          errorMessage = (data as any).detail
+          const detail = (data as any).detail
+          
+          // 如果 detail 是对象（如算力不足详情），提取 message 字段
+          if (typeof detail === 'object' && detail !== null) {
+            if ('message' in detail) {
+              errorMessage = detail.message
+            } else if ('error' in detail) {
+              errorMessage = detail.error
+            } else {
+              // 尝试将对象转为 JSON 字符串
+              errorMessage = JSON.stringify(detail)
+            }
+          } else if (typeof detail === 'string') {
+            errorMessage = detail
+          } else {
+            errorMessage = `请求失败 (${status})`
+          }
         } else if (data && typeof data === 'object' && 'message' in data) {
           errorMessage = (data as any).message
         } else {

@@ -62,8 +62,8 @@ export default function UploadArea({ label, image, onChange, purpose = 'source' 
       
       {image ? (
         <div className="relative group">
-          {/* 使用 flex 容器确保图片完整显示且居中，不会被裁剪 */}
-          <div className="w-full h-48 bg-dark-card rounded-sm border border-dark-border overflow-hidden flex items-center justify-center">
+          {/* 使用更高的容器，并确保图片完整显示且居中 */}
+          <div className="w-full aspect-[3/4] min-h-[240px] bg-dark-card rounded-sm border border-dark-border overflow-hidden flex items-center justify-center p-2">
             <img
               src={image}
               alt={label}
