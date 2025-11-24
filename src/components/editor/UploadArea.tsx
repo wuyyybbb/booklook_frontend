@@ -62,8 +62,8 @@ export default function UploadArea({ label, image, onChange, purpose = 'source' 
       
       {image ? (
         <div className="relative">
-          {/* 图片容器 - 固定高度，完整显示不裁剪 */}
-          <div className="w-full h-[500px] bg-dark-card rounded-sm border border-dark-border flex items-center justify-center p-3">
+          {/* 图片容器 - 固定高度240px，完整显示不裁剪 */}
+          <div className="w-full h-[240px] bg-dark-card rounded-sm border border-dark-border flex items-center justify-center p-2">
             <img
               src={image}
               alt={label}
