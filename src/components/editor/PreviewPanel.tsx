@@ -8,7 +8,6 @@ interface PreviewPanelProps {
 }
 
 export default function PreviewPanel({ 
-  sourceImage, 
   resultImage, 
   comparisonImage = null,
   isProcessing,

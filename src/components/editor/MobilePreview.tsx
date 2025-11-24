@@ -8,7 +8,6 @@ interface MobilePreviewProps {
 }
 
 export default function MobilePreview({ 
-  sourceImage, 
   resultImage, 
   comparisonImage = null,
   isProcessing,

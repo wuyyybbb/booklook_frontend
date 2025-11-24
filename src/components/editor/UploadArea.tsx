@@ -62,23 +62,28 @@ export default function UploadArea({ label, image, onChange, purpose = 'source' 
       
       {image ? (
         <div className="relative">
-          {/* 图片容器 - 完全自适应，不限制高度 */}
-          <div className="w-full bg-dark-card rounded-sm border border-dark-border p-2">
+          {/* 图片容器 - 完全自适应，绝不裁剪 */}
+          <div className="w-full bg-dark-card rounded-sm border border-dark-border p-3">
             <img
               src={image}
               alt={label}
-              className="w-full h-auto"
+              className="w-full"
+              style={{
+                display: 'block',
+                height: 'auto',
+                maxWidth: '100%'
+              }}
             />
           </div>
           
           {/* 悬停遮罩 - 重新上传按钮 */}
-          <div className="absolute inset-0 bg-dark/80 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-sm flex items-center justify-center">
+          <div className="absolute inset-0 bg-dark/80 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-sm flex items-center justify-center pointer-events-none">
             <button
               onClick={() => {
                 onChange(null)
                 setUploadError(null)
               }}
-              className="btn-secondary"
+              className="btn-secondary pointer-events-auto"
               disabled={isUploading}
             >
               重新上传
