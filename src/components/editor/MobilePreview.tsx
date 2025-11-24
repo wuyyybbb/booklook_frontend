@@ -17,10 +17,10 @@ export default function MobilePreview({
 }: MobilePreviewProps) {
   return (
     <div className="h-full overflow-y-auto p-4 space-y-4">
-      {/* Processing Result (output:image:1) */}
+      {/* Processing Result (output:image:1) - 移动端 */}
       <div>
         <div className="text-xs font-medium mb-2 text-primary">处理结果</div>
-        <div className="aspect-[3/4] bg-dark-card rounded-sm border border-dark-border overflow-hidden">
+        <div className="aspect-[3/4] bg-dark-card rounded-sm border border-dark-border overflow-hidden flex items-center justify-center">
           {isProcessing ? (
             <div className="w-full h-full flex items-center justify-center">
               <div className="text-center px-4">
@@ -47,44 +47,49 @@ export default function MobilePreview({
               </div>
             </div>
           ) : resultImage ? (
-            <img src={resultImage} alt="处理结果" className="w-full h-full object-contain" />
+            /* 使用 object-contain 保证图片完整显示 */
+            <img 
+              src={resultImage} 
+              alt="处理结果" 
+              className="max-w-full max-h-full object-contain"
+              style={{ width: 'auto', height: 'auto' }}
+            />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-text-tertiary">
-              <div className="text-center px-4">
-                <svg className="w-12 h-12 mx-auto mb-2 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-                <p className="text-sm">等待生成结果</p>
-              </div>
+            <div className="text-center text-text-tertiary px-4">
+              <svg className="w-12 h-12 mx-auto mb-2 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              <p className="text-sm">等待生成结果</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Comparison Image (output:image_comparer:2) */}
+      {/* Comparison Image (output:image_comparer:2) - 移动端 */}
       <div>
         <div className="text-xs font-medium mb-2 text-primary">对比展示</div>
-        <div className="aspect-[3/4] bg-dark-card rounded-sm border border-dark-border overflow-hidden">
+        <div className="aspect-[3/4] bg-dark-card rounded-sm border border-dark-border overflow-hidden flex items-center justify-center">
           {isProcessing ? (
-            <div className="w-full h-full flex items-center justify-center text-text-tertiary">
-              <div className="text-center px-4">
-                <svg className="w-12 h-12 mx-auto mb-2 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-                <p className="text-sm">等待生成对比图</p>
-              </div>
+            <div className="text-center text-text-tertiary px-4">
+              <svg className="w-12 h-12 mx-auto mb-2 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              <p className="text-sm">等待生成对比图</p>
             </div>
           ) : comparisonImage ? (
-            // 对比图片（支持左右滑动查看）
-            <img src={comparisonImage} alt="对比展示" className="w-full h-full object-contain" />
+            /* 对比图片 - 使用 object-contain 保证完整显示 */
+            <img 
+              src={comparisonImage} 
+              alt="对比展示" 
+              className="max-w-full max-h-full object-contain"
+              style={{ width: 'auto', height: 'auto' }}
+            />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-text-tertiary">
-              <div className="text-center px-4">
-                <svg className="w-12 h-12 mx-auto mb-2 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-                <p className="text-sm">等待生成对比图</p>
-              </div>
+            <div className="text-center text-text-tertiary px-4">
+              <svg className="w-12 h-12 mx-auto mb-2 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              <p className="text-sm">等待生成对比图</p>
             </div>
           )}
         </div>

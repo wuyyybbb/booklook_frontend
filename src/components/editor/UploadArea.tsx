@@ -62,11 +62,13 @@ export default function UploadArea({ label, image, onChange, purpose = 'source' 
       
       {image ? (
         <div className="relative group">
+          {/* 使用 flex 容器确保图片完整显示且居中，不会被裁剪 */}
           <div className="w-full h-48 bg-dark-card rounded-sm border border-dark-border overflow-hidden flex items-center justify-center">
             <img
               src={image}
               alt={label}
               className="max-w-full max-h-full object-contain"
+              style={{ width: 'auto', height: 'auto' }}
             />
           </div>
           <div className="absolute inset-0 bg-dark/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-sm flex items-center justify-center">
