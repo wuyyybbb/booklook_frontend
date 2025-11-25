@@ -43,6 +43,7 @@ export default function Editor() {
   const [progress, setProgress] = useState(0)
   const [currentStep, setCurrentStep] = useState<string | null>(null)
   const [_errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [processingTime, setProcessingTime] = useState<number | undefined>(undefined)
   const [historyKey, setHistoryKey] = useState(0) // 用于触发历史记录刷新
   
   // 处理原图上传
@@ -87,9 +88,10 @@ export default function Editor() {
     },
     onComplete: (taskInfo: TaskInfo) => {
       // 任务完成
-      console.log('任务完成:', taskInfo)
+      console.log('✅ Task completed:', taskInfo)
       setIsProcessing(false)
       setTaskStatus(TaskStatus.DONE)
+      setProcessingTime(taskInfo.processing_time)
       
       // 同时设置处理结果和对比图片
       if (taskInfo.result?.output_image) {
@@ -277,6 +279,9 @@ export default function Editor() {
             isProcessing={isProcessing}
             progress={progress}
             currentStep={currentStep}
+            taskStatus={_taskStatus}
+            errorMessage={_errorMessage}
+            processingTime={processingTime}
           />
         </div>
 

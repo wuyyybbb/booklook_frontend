@@ -11,19 +11,18 @@ export default function HistorySidebar({ currentMode, onSelectTask }: HistorySid
   const [tasks, setTasks] = useState<TaskInfo[]>([])
   const [loading, setLoading] = useState(false)
 
-  // 加载历史任务
+  // 加载历史任务 - 显示所有状态
   const loadHistory = async () => {
     try {
       setLoading(true)
       const response = await listTasks({
-        status: TaskStatus.DONE,
         mode: currentMode,
         page: 1,
         page_size: 20
       })
       setTasks(response.tasks || [])
     } catch (error) {
-      console.error('加载历史任务失败:', error)
+      console.error('Failed to load history:', error)
     } finally {
       setLoading(false)
     }
@@ -57,11 +56,47 @@ export default function HistorySidebar({ currentMode, onSelectTask }: HistorySid
     const hours = Math.floor(diff / 3600000)
     const days = Math.floor(diff / 86400000)
 
-    if (minutes < 1) return '刚刚'
-    if (minutes < 60) return `${minutes}分钟前`
-    if (hours < 24) return `${hours}小时前`
-    if (days < 7) return `${days}天前`
-    return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+    if (minutes < 1) return 'Just now'
+    if (minutes < 60) return `${minutes}m ago`
+    if (hours < 24) return `${hours}h ago`
+    if (days < 7) return `${days}d ago`
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
+
+  // 获取状态徽章样式
+  const getStatusBadge = (status: TaskStatus) => {
+    switch (status) {
+      case TaskStatus.DONE:
+        return {
+          bg: 'bg-green-500',
+          text: '✓',
+          title: 'Completed'
+        }
+      case TaskStatus.PROCESSING:
+        return {
+          bg: 'bg-blue-500 animate-pulse',
+          text: '⋯',
+          title: 'Processing'
+        }
+      case TaskStatus.FAILED:
+        return {
+          bg: 'bg-red-500',
+          text: '✗',
+          title: 'Failed'
+        }
+      case TaskStatus.PENDING:
+        return {
+          bg: 'bg-yellow-500',
+          text: '⋯',
+          title: 'Pending'
+        }
+      default:
+        return {
+          bg: 'bg-gray-500',
+          text: '?',
+          title: 'Unknown'
+        }
+    }
   }
 
   return (
@@ -88,28 +123,43 @@ export default function HistorySidebar({ currentMode, onSelectTask }: HistorySid
           <div className="p-1.5 space-y-1.5">
             {tasks.map((task) => {
               const thumbnail = getTaskThumbnail(task)
+              const statusBadge = getStatusBadge(task.status)
               return (
                 <div
                   key={task.task_id}
                   onClick={() => onSelectTask?.(task)}
                   className="group relative cursor-pointer rounded-sm border-2 border-dark-border hover:border-primary transition-all duration-200 overflow-hidden"
-                  title={`${formatTime(task.completed_at || task.created_at)}${task.processing_time ? ` - ${task.processing_time.toFixed(1)}s` : ''}`}
+                  title={`${statusBadge.title} - ${formatTime(task.completed_at || task.created_at)}${task.processing_time ? ` - ${task.processing_time.toFixed(1)}s` : ''}`}
                 >
                   {/* 紧凑的缩略图 */}
                   <div className="aspect-[3/4] bg-dark-border relative overflow-hidden">
                     {thumbnail ? (
                       <img
                         src={thumbnail}
-                        alt="历史结果"
+                        alt="History result"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-text-tertiary">
-                        <svg className="w-6 h-6 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
+                        {task.status === TaskStatus.PROCESSING ? (
+                          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <svg className="w-6 h-6 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        )}
                       </div>
                     )}
+                    
+                    {/* 状态徽章 */}
+                    <div className="absolute top-1 right-1">
+                      <div 
+                        className={`${statusBadge.bg} w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg`}
+                        title={statusBadge.title}
+                      >
+                        {statusBadge.text}
+                      </div>
+                    </div>
                     
                     {/* Hover 指示器 */}
                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">

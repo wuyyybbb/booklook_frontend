@@ -5,14 +5,21 @@ interface PreviewPanelProps {
   isProcessing: boolean
   progress?: number
   currentStep?: string | null
+  taskStatus?: string | null
+  errorMessage?: string | null
+  processingTime?: number
 }
 
 export default function PreviewPanel({ 
+  sourceImage, 
   resultImage, 
   comparisonImage = null,
   isProcessing,
   progress = 0,
-  currentStep = null
+  currentStep = null,
+  taskStatus = null,
+  errorMessage = null,
+  processingTime = undefined
 }: PreviewPanelProps) {
   return (
     <div className="h-full p-6 overflow-y-auto">
@@ -121,18 +128,97 @@ export default function PreviewPanel({
           </div>
         </div>
 
-        {/* Processing Info */}
+        {/* Status Cards */}
+        {/* Processing State */}
         {isProcessing && (
-          <div className="mt-6 card border-primary/20">
+          <div className="mt-6 card border-primary/20 bg-primary/5">
             <div className="flex items-start">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse mt-2 mr-3"></div>
-              <div className="flex-1">
-                <p className="font-medium mb-1">
-                  正在处理 {progress > 0 && `(${progress}%)`}
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse mt-2 mr-3 flex-shrink-0"></div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium mb-1 flex items-center gap-2">
+                  <span>AI Processing</span>
+                  {progress > 0 && <span className="text-sm text-primary">({progress}%)</span>}
                 </p>
                 <p className="text-sm text-text-secondary">
-                  {currentStep || 'AI 正在分析图像并进行智能处理，请耐心等待...'}
+                  {currentStep || 'AI is analyzing and processing your image...'}
                 </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Success State */}
+        {!isProcessing && taskStatus === 'done' && resultImage && (
+          <div className="mt-6 card border-green-500/20 bg-green-500/5">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-green-500 mb-1">
+                  Generation Complete!
+                </p>
+                <p className="text-sm text-text-secondary">
+                  Your image has been processed successfully
+                  {processingTime && ` in ${processingTime.toFixed(1)}s`}.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {resultImage && (
+                    <a 
+                      href={resultImage} 
+                      download 
+                      className="btn-secondary text-sm py-1.5 px-4"
+                    >
+                      <svg className="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      Download Result
+                    </a>
+                  )}
+                  {comparisonImage && (
+                    <a 
+                      href={comparisonImage} 
+                      download 
+                      className="btn-ghost text-sm py-1.5 px-4"
+                    >
+                      Download Comparison
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Error State */}
+        {!isProcessing && taskStatus === 'failed' && errorMessage && (
+          <div className="mt-6 card border-red-500/20 bg-red-500/5">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-red-500 mb-1">
+                  Generation Failed
+                </p>
+                <p className="text-sm text-text-secondary break-words">
+                  {errorMessage}
+                </p>
+                <div className="mt-3">
+                  <button 
+                    onClick={() => window.location.reload()}
+                    className="btn-secondary text-sm py-1.5 px-4"
+                  >
+                    <svg className="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Try Again
+                  </button>
+                </div>
               </div>
             </div>
           </div>
