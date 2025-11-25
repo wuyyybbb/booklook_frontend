@@ -270,7 +270,6 @@ export default function Editor() {
         {/* Right Preview Panel */}
         <div className="flex-1 overflow-hidden">
           <PreviewPanel
-            sourceImage={sourceImage}
             resultImage={resultImage}
             comparisonImage={comparisonImage}
             isProcessing={isProcessing}
@@ -305,7 +304,6 @@ export default function Editor() {
         {/* Top Preview */}
         <div className="flex-1 overflow-hidden">
           <MobilePreview
-            sourceImage={sourceImage}
             resultImage={resultImage}
             comparisonImage={comparisonImage}
             isProcessing={isProcessing}

@@ -1,5 +1,4 @@
 interface MobilePreviewProps {
-  sourceImage: string | null
   resultImage: string | null
   comparisonImage?: string | null
   isProcessing: boolean

@@ -112,13 +112,13 @@ export function getErrorSuggestion(errorCode?: string): string | null {
  * 格式化完整的错误信息（用于显示）
  * @param errorCode 错误码
  * @param errorMessage 原始错误消息
- * @param errorDetails 错误详情
+ * @param _errorDetails 错误详情 (reserved for future use)
  * @returns 格式化后的错误信息
  */
 export function formatErrorDisplay(
   errorCode?: string,
   errorMessage?: string,
-  errorDetails?: string
+  _errorDetails?: string
 ): { title: string; message: string; suggestion?: string } {
   // 优先使用映射表中的友好消息
   const friendlyMessage = errorCode ? getErrorMessage(errorCode, errorMessage) : errorMessage || '处理失败'

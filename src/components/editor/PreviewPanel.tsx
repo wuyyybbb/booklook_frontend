@@ -1,5 +1,4 @@
 interface PreviewPanelProps {
-  sourceImage: string | null
   resultImage: string | null
   comparisonImage?: string | null
   isProcessing: boolean
@@ -11,7 +10,6 @@ interface PreviewPanelProps {
 }
 
 export default function PreviewPanel({ 
-  sourceImage, 
   resultImage, 
   comparisonImage = null,
   isProcessing,
