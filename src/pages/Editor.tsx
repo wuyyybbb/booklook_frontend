@@ -110,14 +110,35 @@ export default function Editor() {
     },
     onError: (taskInfo: TaskInfo) => {
       // 任务失败
-      console.error('任务失败:', taskInfo)
+      console.error('❌ 任务失败:', taskInfo)
       setIsProcessing(false)
       setTaskStatus(TaskStatus.FAILED)
       
-      // 显示错误信息
-      const errorMsg = taskInfo.error?.message || '任务处理失败'
+      // 构建详细的错误信息
+      const error = taskInfo.error
+      let errorMsg = '任务处理失败'
+      
+      if (error) {
+        // 显示错误码和消息
+        errorMsg = error.message || errorMsg
+        
+        // 记录详细信息到控制台
+        console.error('错误码:', error.code)
+        console.error('错误消息:', error.message)
+        if (error.details) {
+          console.error('错误详情:', error.details)
+        }
+        
+        // 如果有详细信息，追加到提示中
+        if (error.code) {
+          errorMsg = `[${error.code}] ${errorMsg}`
+        }
+      }
+      
       setErrorMessage(errorMsg)
-      alert(`任务失败: ${errorMsg}`)
+      
+      // 弹窗显示错误（可以考虑改为更友好的 UI 组件）
+      alert(`❌ 任务失败\n\n${errorMsg}\n\n请检查：\n- 图片格式是否正确\n- 网络连接是否正常\n- 服务是否可用`)
     }
   })
   
@@ -172,7 +193,20 @@ export default function Editor() {
       
     } catch (error) {
       console.error('创建任务失败:', error)
-      alert('创建任务失败: ' + (error instanceof Error ? error.message : '未知错误'))
+      
+      // 提取错误信息
+      let errorMsg = '未知错误'
+      if (error instanceof Error) {
+        errorMsg = error.message
+      } else if (typeof error === 'string') {
+        errorMsg = error
+      } else if (error && typeof error === 'object') {
+        // 尝试从对象中提取错误信息
+        const err = error as any
+        errorMsg = err.message || err.error || JSON.stringify(error)
+      }
+      
+      alert('创建任务失败:\n' + errorMsg)
       setIsProcessing(false)
       setTaskStatus(TaskStatus.FAILED)
       setCurrentTaskId(null)
