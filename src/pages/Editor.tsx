@@ -10,6 +10,7 @@ import { UploadResult } from '../components/editor/UploadArea'
 import { createTask, EditMode as ApiEditMode, TaskStatus, TaskInfo } from '../api/tasks'
 import { useTaskPolling } from '../hooks/useTaskPolling'
 import { getImageUrl } from '../api/upload'
+import { formatErrorDisplay, isRetryableError } from '../utils/errorMessages'
 
 export type EditMode = 'HEAD_SWAP' | 'BACKGROUND_CHANGE' | 'POSE_CHANGE'
 
@@ -114,31 +115,40 @@ export default function Editor() {
       setIsProcessing(false)
       setTaskStatus(TaskStatus.FAILED)
       
-      // 构建详细的错误信息
+      // 使用统一的错误消息格式化
       const error = taskInfo.error
-      let errorMsg = '任务处理失败'
+      const formattedError = formatErrorDisplay(
+        error?.code,
+        error?.message,
+        error?.details
+      )
       
+      // 记录详细信息到控制台
       if (error) {
-        // 显示错误码和消息
-        errorMsg = error.message || errorMsg
-        
-        // 记录详细信息到控制台
         console.error('错误码:', error.code)
         console.error('错误消息:', error.message)
         if (error.details) {
           console.error('错误详情:', error.details)
         }
-        
-        // 如果有详细信息，追加到提示中
-        if (error.code) {
-          errorMsg = `[${error.code}] ${errorMsg}`
-        }
       }
       
-      setErrorMessage(errorMsg)
+      setErrorMessage(formattedError.message)
       
-      // 弹窗显示错误（可以考虑改为更友好的 UI 组件）
-      alert(`❌ 任务失败\n\n${errorMsg}\n\n请检查：\n- 图片格式是否正确\n- 网络连接是否正常\n- 服务是否可用`)
+      // 构建用户友好的提示信息
+      let alertMessage = `❌ ${formattedError.title}\n\n${formattedError.message}`
+      
+      // 添加建议
+      if (formattedError.suggestion) {
+        alertMessage += `\n\n💡 建议：${formattedError.suggestion}`
+      }
+      
+      // 添加重试提示
+      if (error?.code && isRetryableError(error.code)) {
+        alertMessage += '\n\n⚠️ 这是一个临时错误，建议稍后重试'
+      }
+      
+      // 弹窗显示错误
+      alert(alertMessage)
     }
   })
   
