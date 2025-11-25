@@ -6,6 +6,7 @@ import PreviewPanel from '../components/editor/PreviewPanel'
 import MobilePreview from '../components/editor/MobilePreview'
 import MobileControls from '../components/editor/MobileControls'
 import HistorySidebar from '../components/editor/HistorySidebar'
+import UserMenu from '../components/header/UserMenu'
 import { UploadResult } from '../components/editor/UploadArea'
 import { createTask, EditMode as ApiEditMode, TaskStatus, TaskInfo } from '../api/tasks'
 import { useTaskPolling } from '../hooks/useTaskPolling'
@@ -241,11 +242,7 @@ export default function Editor() {
               <ModeTabs currentMode={currentMode} onModeChange={setCurrentMode} />
             </div>
 
-            <button className="btn-ghost">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-              </svg>
-            </button>
+            <UserMenu />
           </div>
 
           {/* Mobile Mode Tabs */}

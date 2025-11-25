@@ -63,6 +63,17 @@ export {
   type CurrentUserResponse,
 } from './auth'
 
+// ==================== 导出计费相关 ====================
+export {
+  getUserBilling,
+  changePlan,
+  consumeCredits,
+  addCredits,
+  type UserBillingInfo,
+  type ChangePlanRequest,
+  type ChangePlanResponse,
+} from './billing'
+
 // ==================== API 命名空间（可选的组织方式） ====================
 
 /**
