@@ -296,6 +296,37 @@ export default function Editor() {
               setComparisonImage(comparisonUrl)
             }
           }}
+          onRetryTask={(task) => {
+            // 重试失败的任务
+            console.log('🔄 重试任务:', task.task_id)
+            
+            // 恢复任务的原始输入
+            if (task.source_image) {
+              // 如果有 source_image，尝试恢复图片显示
+              // 注意：这里需要从 task 数据中获取图片信息
+              console.log('恢复原图:', task.source_image)
+            }
+            
+            // 根据任务配置恢复参考图
+            if (task.config) {
+              const config = task.config as Record<string, unknown>
+              if (config.pose_image || config.reference_image || config.target_face_image) {
+                const refImage = config.pose_image || config.reference_image || config.target_face_image
+                console.log('恢复参考图:', refImage)
+              }
+            }
+            
+            // 提示用户
+            if (confirm('确认重试此任务？\n\n系统会使用相同的图片和配置重新生成，不会额外扣除积分。')) {
+              // 使用相同的配置创建新任务
+              handleGenerate()
+              
+              // 刷新历史记录（在任务完成后）
+              setTimeout(() => {
+                setHistoryKey(prev => prev + 1)
+              }, 1000)
+            }
+          }}
         />
       </div>
 

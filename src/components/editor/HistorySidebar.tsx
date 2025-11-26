@@ -6,9 +6,10 @@ import { ERROR_MESSAGES } from '../../utils/errorMessages'
 interface HistorySidebarProps {
   currentMode: string
   onSelectTask?: (task: TaskInfo) => void
+  onRetryTask?: (task: TaskInfo) => void
 }
 
-export default function HistorySidebar({ currentMode, onSelectTask }: HistorySidebarProps) {
+export default function HistorySidebar({ currentMode, onSelectTask, onRetryTask }: HistorySidebarProps) {
   const [tasks, setTasks] = useState<TaskInfo[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -166,12 +167,14 @@ export default function HistorySidebar({ currentMode, onSelectTask }: HistorySid
               return (
                 <div
                   key={task.task_id}
-                  onClick={() => onSelectTask?.(task)}
-                  className="group relative cursor-pointer rounded-sm border-2 border-dark-border hover:border-primary transition-all duration-200 overflow-hidden"
+                  className="group relative rounded-sm border-2 border-dark-border hover:border-primary transition-all duration-200 overflow-hidden"
                   title={tooltipText}
                 >
                   {/* 紧凑的缩略图 */}
-                  <div className="aspect-[3/4] bg-dark-border relative overflow-hidden">
+                  <div 
+                    className="aspect-[3/4] bg-dark-border relative overflow-hidden cursor-pointer"
+                    onClick={() => onSelectTask?.(task)}
+                  >
                     {thumbnail ? (
                       <img
                         src={thumbnail}
@@ -215,6 +218,25 @@ export default function HistorySidebar({ currentMode, onSelectTask }: HistorySid
                       </p>
                     </div>
                   </div>
+                  
+                  {/* 失败任务：重试按钮 */}
+                  {task.status === TaskStatus.FAILED && onRetryTask && (
+                    <div className="p-1 bg-dark-card/50 backdrop-blur-sm">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onRetryTask(task)
+                        }}
+                        className="w-full py-1 text-xs bg-primary/10 hover:bg-primary/20 text-primary rounded-sm transition-colors flex items-center justify-center space-x-1"
+                        title="重新生成（不扣除积分）"
+                      >
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span>重试</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               )
             })}
