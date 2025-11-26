@@ -48,10 +48,10 @@ export const ERROR_MESSAGES: Record<string, string> = {
   ENGINE_AUTH_FAILED: 'AI 引擎认证失败',
   
   // ComfyUI 特定错误
-  COMFYUI_NOT_AVAILABLE: 'AI 服务暂时不可用',
-  COMFYUI_CONNECTION_TIMEOUT: '连接 AI 服务超时',
+  COMFYUI_NOT_AVAILABLE: 'AI 引擎暂时不可用',
+  COMFYUI_CONNECTION_TIMEOUT: '连接 AI 引擎超时',
   COMFYUI_WORKFLOW_ERROR: 'AI 工作流配置错误',
-  COMFYUI_PROCESSING_FAILED: 'AI 处理失败',
+  COMFYUI_PROCESSING_FAILED: 'AI 引擎暂时不可用',
   COMFYUI_RESULT_NOT_FOUND: '无法获取 AI 处理结果',
   
   // 资源错误
@@ -60,7 +60,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
   STORAGE_FULL: '存储空间已满',
   
   // 业务逻辑错误
-  PROCESSING_FAILED: '处理失败',
+  PROCESSING_FAILED: 'AI 引擎暂时不可用',
   RESULT_SAVE_FAILED: '结果保存失败',
   NO_FACE_DETECTED: '未检测到人脸',
   MULTIPLE_FACES_DETECTED: '检测到多张人脸',
@@ -74,8 +74,16 @@ export const ERROR_SUGGESTIONS: Record<string, string> = {
   IMAGE_FORMAT_INVALID: '请上传 JPG、PNG 或 WEBP 格式的图片',
   IMAGE_SIZE_TOO_LARGE: '请上传小于 10MB 的图片',
   IMAGE_SIZE_TOO_SMALL: '请上传分辨率至少为 512x512 的图片',
-  COMFYUI_NOT_AVAILABLE: '请稍后重试',
-  COMFYUI_CONNECTION_TIMEOUT: '请检查网络连接或稍后重试',
+  
+  // AI 引擎错误 - 友好提示
+  PROCESSING_FAILED: '请稍后重试，不会扣除积分',
+  COMFYUI_NOT_AVAILABLE: '请稍后重试，不会扣除积分',
+  COMFYUI_CONNECTION_TIMEOUT: '请稍后重试，不会扣除积分',
+  COMFYUI_PROCESSING_FAILED: '请稍后重试，不会扣除积分',
+  ENGINE_NOT_AVAILABLE: '请稍后重试，不会扣除积分',
+  ENGINE_CONNECTION_FAILED: '请稍后重试，不会扣除积分',
+  ENGINE_TIMEOUT: '请稍后重试，不会扣除积分',
+  
   NO_FACE_DETECTED: '请确保图片中包含清晰可见的人脸',
   MULTIPLE_FACES_DETECTED: '请上传只包含单个人脸的图片',
   INSUFFICIENT_CREDITS: '请充值算力或升级套餐',
@@ -142,10 +150,14 @@ export function isRetryableError(errorCode?: string): boolean {
   }
   
   const retryableErrors = [
+    'PROCESSING_FAILED',
+    'ENGINE_NOT_AVAILABLE',
     'ENGINE_CONNECTION_FAILED',
     'ENGINE_TIMEOUT',
     'COMFYUI_NOT_AVAILABLE',
     'COMFYUI_CONNECTION_TIMEOUT',
+    'COMFYUI_PROCESSING_FAILED',
+    'COMFYUI_RESULT_NOT_FOUND',
     'PIPELINE_TIMEOUT',
     'INTERNAL_ERROR',
   ]

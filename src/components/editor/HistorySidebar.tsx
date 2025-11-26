@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { TaskInfo, TaskStatus, listTasks } from '../../api/tasks'
 import { getImageUrl } from '../../api/upload'
+import { ERROR_MESSAGES } from '../../utils/errorMessages'
 
 interface HistorySidebarProps {
   currentMode: string
@@ -45,6 +46,33 @@ export default function HistorySidebar({ currentMode, onSelectTask }: HistorySid
       return getImageUrl(task.result.comparison_image)
     }
     return null
+  }
+
+  // 获取失败原因的友好提示
+  const getFailureReason = (task: TaskInfo): string | null => {
+    if (task.status !== TaskStatus.FAILED || !task.error) {
+      return null
+    }
+    
+    const errorCode = task.error.code
+    const errorMessage = task.error.message
+    
+    // 使用映射表中的友好提示
+    if (errorCode && ERROR_MESSAGES[errorCode]) {
+      return ERROR_MESSAGES[errorCode]
+    }
+    
+    // 如果是 ComfyUI 或 Engine 相关错误，使用统一提示
+    if (errorCode && (
+      errorCode.includes('COMFYUI') || 
+      errorCode.includes('ENGINE') ||
+      errorCode === 'PROCESSING_FAILED'
+    )) {
+      return 'AI 引擎暂时不可用'
+    }
+    
+    // 降级到原始错误消息
+    return errorMessage || '处理失败'
   }
 
   // 格式化时间
@@ -124,12 +152,23 @@ export default function HistorySidebar({ currentMode, onSelectTask }: HistorySid
             {tasks.map((task) => {
               const thumbnail = getTaskThumbnail(task)
               const statusBadge = getStatusBadge(task.status)
+              const failureReason = getFailureReason(task)
+              
+              // 构建 tooltip 内容
+              let tooltipText = `${statusBadge.title} - ${formatTime(task.completed_at || task.created_at)}`
+              if (task.processing_time) {
+                tooltipText += ` - ${task.processing_time.toFixed(1)}s`
+              }
+              if (failureReason) {
+                tooltipText += `\n失败原因: ${failureReason}`
+              }
+              
               return (
                 <div
                   key={task.task_id}
                   onClick={() => onSelectTask?.(task)}
                   className="group relative cursor-pointer rounded-sm border-2 border-dark-border hover:border-primary transition-all duration-200 overflow-hidden"
-                  title={`${statusBadge.title} - ${formatTime(task.completed_at || task.created_at)}${task.processing_time ? ` - ${task.processing_time.toFixed(1)}s` : ''}`}
+                  title={tooltipText}
                 >
                   {/* 紧凑的缩略图 */}
                   <div className="aspect-[3/4] bg-dark-border relative overflow-hidden">
