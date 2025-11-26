@@ -1,3 +1,7 @@
+import { useState } from 'react'
+import { TaskError } from '../../api/tasks'
+import { classifyError, getErrorIcon, getErrorColorScheme } from '../../utils/errorClassifier'
+
 interface PreviewPanelProps {
   resultImage: string | null
   comparisonImage?: string | null
@@ -5,7 +9,7 @@ interface PreviewPanelProps {
   progress?: number
   currentStep?: string | null
   taskStatus?: string | null
-  errorMessage?: string | null
+  error?: TaskError | null
   processingTime?: number
 }
 
@@ -16,9 +20,10 @@ export default function PreviewPanel({
   progress = 0,
   currentStep = null,
   taskStatus = null,
-  errorMessage = null,
+  error = null,
   processingTime = undefined
 }: PreviewPanelProps) {
+  const [showDetails, setShowDetails] = useState(false)
   return (
     <div className="h-full p-6 overflow-y-auto">
       <div className="max-w-5xl mx-auto">
@@ -190,37 +195,84 @@ export default function PreviewPanel({
           </div>
         )}
         
-        {/* Error State */}
-        {!isProcessing && taskStatus === 'failed' && errorMessage && (
-          <div className="mt-6 card border-red-500/20 bg-red-500/5">
-            <div className="flex items-start">
-              <div className="flex-shrink-0 w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center mr-3">
-                <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-red-500 mb-1">
-                  Generation Failed
-                </p>
-                <p className="text-sm text-text-secondary break-words">
-                  {errorMessage}
-                </p>
-                <div className="mt-3">
-                  <button 
-                    onClick={() => window.location.reload()}
-                    className="btn-secondary text-sm py-1.5 px-4"
-                  >
-                    <svg className="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    Try Again
-                  </button>
+        {/* Error State - Enhanced with classification */}
+        {!isProcessing && taskStatus === 'failed' && error && (() => {
+          const classified = classifyError(error.code, error.message, error.details)
+          const colors = getErrorColorScheme(classified.category)
+          const icon = getErrorIcon(classified.category)
+          
+          return (
+            <div className={`mt-6 card border ${colors.border} ${colors.bg}`}>
+              <div className="flex items-start">
+                <div className={`flex-shrink-0 w-10 h-10 ${colors.iconBg} rounded-full flex items-center justify-center mr-3`}>
+                  <span className="text-2xl">{icon}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`font-medium ${colors.text} mb-1`}>
+                    {classified.category === 'validation' && '参数验证失败'}
+                    {classified.category === 'service_unavailable' && 'AI 服务不可用'}
+                    {classified.category === 'processing' && '处理失败'}
+                    {classified.category === 'unknown' && '处理失败'}
+                  </p>
+                  <p className="text-sm text-text-secondary mb-2">
+                    {classified.userMessage}
+                  </p>
+                  {classified.suggestion && (
+                    <p className="text-xs text-text-tertiary mb-3">
+                      💡 {classified.suggestion}
+                    </p>
+                  )}
+                  
+                  <div className="flex flex-wrap gap-2">
+                    <button 
+                      onClick={() => window.location.reload()}
+                      className="btn-secondary text-sm py-1.5 px-4"
+                    >
+                      <svg className="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      重试
+                    </button>
+                    <button
+                      onClick={() => setShowDetails(!showDetails)}
+                      className="btn-ghost text-sm py-1.5 px-4"
+                    >
+                      <svg className="w-4 h-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {showDetails ? '隐藏详情' : '查看详情'}
+                    </button>
+                  </div>
+                  
+                  {/* Technical details (for debugging) */}
+                  {showDetails && (
+                    <div className="mt-4 p-3 bg-dark-card rounded-sm border border-dark-border">
+                      <p className="text-xs font-mono text-text-tertiary mb-2">
+                        <span className="text-text-secondary font-semibold">错误码:</span> {error.code || 'N/A'}
+                      </p>
+                      <p className="text-xs font-mono text-text-tertiary mb-2">
+                        <span className="text-text-secondary font-semibold">错误消息:</span>
+                      </p>
+                      <p className="text-xs font-mono text-text-tertiary break-all mb-2 pl-2 border-l-2 border-dark-border">
+                        {classified.technicalMessage}
+                      </p>
+                      {error.details && (
+                        <>
+                          <p className="text-xs font-mono text-text-tertiary mb-2">
+                            <span className="text-text-secondary font-semibold">详细信息:</span>
+                          </p>
+                          <p className="text-xs font-mono text-text-tertiary break-all pl-2 border-l-2 border-dark-border">
+                            {error.details}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )
+        })()}
       </div>
     </div>
   )

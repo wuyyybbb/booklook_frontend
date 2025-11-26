@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { TaskInfo, TaskStatus, listTasks } from '../../api/tasks'
 import { getImageUrl } from '../../api/upload'
-import { ERROR_MESSAGES } from '../../utils/errorMessages'
+import { classifyError } from '../../utils/errorClassifier'
 
 interface HistorySidebarProps {
   currentMode: string
@@ -55,25 +55,14 @@ export default function HistorySidebar({ currentMode, onSelectTask, onRetryTask 
       return null
     }
     
-    const errorCode = task.error.code
-    const errorMessage = task.error.message
+    // 使用错误分类器
+    const classified = classifyError(
+      task.error.code,
+      task.error.message,
+      task.error.details
+    )
     
-    // 使用映射表中的友好提示
-    if (errorCode && ERROR_MESSAGES[errorCode]) {
-      return ERROR_MESSAGES[errorCode]
-    }
-    
-    // 如果是 ComfyUI 或 Engine 相关错误，使用统一提示
-    if (errorCode && (
-      errorCode.includes('COMFYUI') || 
-      errorCode.includes('ENGINE') ||
-      errorCode === 'PROCESSING_FAILED'
-    )) {
-      return 'AI 引擎暂时不可用'
-    }
-    
-    // 降级到原始错误消息
-    return errorMessage || '处理失败'
+    return classified.userMessage
   }
 
   // 格式化时间

@@ -8,7 +8,7 @@ import MobileControls from '../components/editor/MobileControls'
 import HistorySidebar from '../components/editor/HistorySidebar'
 import UserMenu from '../components/header/UserMenu'
 import { UploadResult } from '../components/editor/UploadArea'
-import { createTask, EditMode as ApiEditMode, TaskStatus, TaskInfo } from '../api/tasks'
+import { createTask, EditMode as ApiEditMode, TaskStatus, TaskInfo, TaskError } from '../api/tasks'
 import { useTaskPolling } from '../hooks/useTaskPolling'
 import { getImageUrl } from '../api/upload'
 import { formatErrorDisplay, isRetryableError } from '../utils/errorMessages'
@@ -43,7 +43,7 @@ export default function Editor() {
   const [_taskStatus, setTaskStatus] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
   const [currentStep, setCurrentStep] = useState<string | null>(null)
-  const [_errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [taskError, setTaskError] = useState<TaskError | null>(null)
   const [processingTime, setProcessingTime] = useState<number | undefined>(undefined)
   const [historyKey, setHistoryKey] = useState(0) // 用于触发历史记录刷新
   
@@ -118,8 +118,11 @@ export default function Editor() {
       setIsProcessing(false)
       setTaskStatus(TaskStatus.FAILED)
       
-      // 使用统一的错误消息格式化
+      // 保存完整的错误对象
       const error = taskInfo.error
+      setTaskError(error || null)
+      
+      // 使用统一的错误消息格式化
       const formattedError = formatErrorDisplay(
         error?.code,
         error?.message,
@@ -134,8 +137,6 @@ export default function Editor() {
           console.error('错误详情:', error.details)
         }
       }
-      
-      setErrorMessage(formattedError.message)
       
       // 构建用户友好的提示信息
       let alertMessage = `❌ ${formattedError.title}\n\n${formattedError.message}`
@@ -171,7 +172,7 @@ export default function Editor() {
     
     // 3. 重置状态
     setResultImage(null)
-    setErrorMessage(null)
+    setTaskError(null)
     setProgress(0)
     setCurrentStep(null)
     
@@ -276,7 +277,7 @@ export default function Editor() {
             progress={progress}
             currentStep={currentStep}
             taskStatus={_taskStatus}
-            errorMessage={_errorMessage}
+            error={taskError}
             processingTime={processingTime}
           />
         </div>

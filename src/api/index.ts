@@ -74,6 +74,14 @@ export {
   type ChangePlanResponse,
 } from './billing'
 
+// ==================== 导出错误处理工具 ====================
+export {
+  classifyError,
+  getErrorIcon,
+  getErrorColorScheme,
+  type ClassifiedError,
+} from '../utils/errorClassifier'
+
 // ==================== API 命名空间（可选的组织方式） ====================
 
 /**
