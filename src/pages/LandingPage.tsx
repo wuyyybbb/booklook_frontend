@@ -255,22 +255,16 @@ export default function LandingPage() {
                     data-item-num={num}
                   >
                     <div className="relative group">
-                      {/* 容器：动态宽度，左右分屏效果 */}
+                      {/* 容器：固定宽度，图片和视频重叠 */}
                       <div 
-                        className="relative overflow-hidden transition-all duration-700" 
+                        className="relative overflow-hidden" 
                         style={{ 
-                          width: playingVideos.has(num) ? '420px' : '210px',
+                          width: '210px',
                           height: '314px' 
                         }}
                       >
-                        {/* 左侧：视频层 */}
-                        <div 
-                          className="absolute left-0 top-0 bottom-0 overflow-hidden transition-all duration-700"
-                          style={{
-                            width: playingVideos.has(num) ? '210px' : '0px',
-                            opacity: playingVideos.has(num) ? 1 : 0
-                          }}
-                        >
+                        {/* 底层：视频（z-index: 0） */}
+                        <div className="absolute inset-0 z-0">
                           <video
                             ref={(el) => {
                               if (el) videoRefs.current.set(num, el)
@@ -279,18 +273,18 @@ export default function LandingPage() {
                             loop
                             muted
                             playsInline
-                            style={{ width: '210px', height: '314px' }}
                           >
                             <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
                           </video>
                         </div>
                         
-                        {/* 右侧：图片层 */}
+                        {/* 上层：图片（z-index: 10），通过 clip-path 控制显示区域 */}
                         <div 
-                          className="absolute top-0 bottom-0 overflow-hidden transition-all duration-700"
+                          className="absolute inset-0 z-10 transition-all duration-700"
                           style={{
-                            left: playingVideos.has(num) ? '210px' : '0px',
-                            width: '210px'
+                            clipPath: playingVideos.has(num) 
+                              ? 'inset(0 0 0 50%)' // 只显示右半部分（左侧被裁剪，露出视频）
+                              : 'inset(0 0 0 0)'   // 显示全部（覆盖视频）
                           }}
                         >
                           <img
@@ -301,7 +295,7 @@ export default function LandingPage() {
                         </div>
                         
                         {/* Subtle Glow Effect on Hover */}
-                        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
+                        <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                       </div>
                     </div>
                   </div>
@@ -315,22 +309,16 @@ export default function LandingPage() {
                     data-item-num={num + 10}
                   >
                     <div className="relative group">
-                      {/* 容器：动态宽度，左右分屏效果 */}
+                      {/* 容器：固定宽度，图片和视频重叠 */}
                       <div 
-                        className="relative overflow-hidden transition-all duration-700" 
+                        className="relative overflow-hidden" 
                         style={{ 
-                          width: playingVideos.has(num + 10) ? '420px' : '210px',
+                          width: '210px',
                           height: '314px' 
                         }}
                       >
-                        {/* 左侧：视频层 */}
-                        <div 
-                          className="absolute left-0 top-0 bottom-0 overflow-hidden transition-all duration-700"
-                          style={{
-                            width: playingVideos.has(num + 10) ? '210px' : '0px',
-                            opacity: playingVideos.has(num + 10) ? 1 : 0
-                          }}
-                        >
+                        {/* 底层：视频（z-index: 0） */}
+                        <div className="absolute inset-0 z-0">
                           <video
                             ref={(el) => {
                               if (el) videoRefs.current.set(num + 10, el)
@@ -339,18 +327,18 @@ export default function LandingPage() {
                             loop
                             muted
                             playsInline
-                            style={{ width: '210px', height: '314px' }}
                           >
                             <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
                           </video>
                         </div>
                         
-                        {/* 右侧：图片层 */}
+                        {/* 上层：图片（z-index: 10），通过 clip-path 控制显示区域 */}
                         <div 
-                          className="absolute top-0 bottom-0 overflow-hidden transition-all duration-700"
+                          className="absolute inset-0 z-10 transition-all duration-700"
                           style={{
-                            left: playingVideos.has(num + 10) ? '210px' : '0px',
-                            width: '210px'
+                            clipPath: playingVideos.has(num + 10) 
+                              ? 'inset(0 0 0 50%)' // 只显示右半部分（左侧被裁剪，露出视频）
+                              : 'inset(0 0 0 0)'   // 显示全部（覆盖视频）
                           }}
                         >
                           <img
@@ -361,7 +349,7 @@ export default function LandingPage() {
                         </div>
                         
                         {/* Subtle Glow Effect on Hover */}
-                        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
+                        <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                       </div>
                     </div>
                   </div>
