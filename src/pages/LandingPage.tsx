@@ -43,48 +43,66 @@ export default function LandingPage() {
   // 处理视频播放/暂停
   const handleVideoPlayback = useCallback((itemNum: number, shouldPlay: boolean) => {
     const video = videoRefs.current.get(itemNum)
-    if (video) {
-      if (shouldPlay && video.paused) {
+    if (!video) return
+
+    if (shouldPlay) {
+      if (video.paused) {
         video.play().catch(err => console.log('Video play failed:', err))
-        setPlayingVideos(prev => new Set(prev).add(itemNum))
-      } else if (!shouldPlay && !video.paused) {
+      }
+      setPlayingVideos(prev => {
+        const newSet = new Set(prev)
+        newSet.add(itemNum)
+        return newSet
+      })
+    } else {
+      if (!video.paused) {
         video.pause()
         video.currentTime = 0 // 重置视频到开始
-        setPlayingVideos(prev => {
-          const newSet = new Set(prev)
-          newSet.delete(itemNum)
-          return newSet
-        })
       }
+      setPlayingVideos(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(itemNum)
+        return newSet
+      })
     }
   }, [])
 
   // 监听滚动，检测元素是否在屏幕中间
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const itemNum = parseInt(entry.target.getAttribute('data-item-num') || '0')
-          if (itemNum > 0) {
-            // 当元素与视口中心区域相交时播放视频
-            const isInCenter = entry.isIntersecting && entry.intersectionRatio > 0.5
-            handleVideoPlayback(itemNum, isInCenter)
+    const checkItemPosition = () => {
+      const items = document.querySelectorAll('.scrolling-item')
+      const viewportCenter = window.innerWidth / 2
+      const centerThreshold = 150 // 中心线左右 150px 范围内算作"在中间"
+      
+      items.forEach((item) => {
+        const itemNum = parseInt(item.getAttribute('data-item-num') || '0')
+        if (itemNum > 0) {
+          const rect = item.getBoundingClientRect()
+          const itemCenter = rect.left + rect.width / 2
+          
+          // 检测元素中心是否在视口中心附近
+          const isInCenter = Math.abs(itemCenter - viewportCenter) < centerThreshold
+          
+          // 调试日志（可以在开发时查看）
+          if (isInCenter && !playingVideos.has(itemNum)) {
+            console.log(`Item ${itemNum} reached center, playing video...`)
           }
-        })
-      },
-      {
-        root: null,
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-        rootMargin: '-25% 0px -25% 0px' // 检测元素是否在屏幕中间 50% 区域
-      }
-    )
+          
+          handleVideoPlayback(itemNum, isInCenter)
+        }
+      })
+    }
 
-    // 观察所有滚动项
-    const items = document.querySelectorAll('.scrolling-item')
-    items.forEach(item => observer.observe(item))
+    // 初始检查
+    checkItemPosition()
 
-    return () => observer.disconnect()
-  }, [handleVideoPlayback])
+    // 监听动画，每帧检查位置
+    const interval = setInterval(checkItemPosition, 100) // 每 100ms 检查一次
+    
+    return () => {
+      clearInterval(interval)
+    }
+  }, [handleVideoPlayback, playingVideos])
 
   return (
     <div className="min-h-screen bg-dark">
@@ -237,39 +255,54 @@ export default function LandingPage() {
                     data-item-num={num}
                   >
                     <div className="relative group">
-                      {/* Video Layer - 在图片下方，当滚动到中间时播放 */}
-                      <div className="absolute inset-0 z-0 overflow-hidden" style={{ width: '210px', height: '314px' }}>
-                        <video
-                          ref={(el) => {
-                            if (el) videoRefs.current.set(num, el)
-                          }}
-                          className="w-full h-full object-cover"
-                          loop
-                          muted
-                          playsInline
-                        >
-                          <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
-                        </video>
-                      </div>
-                      
-                      {/* Image Container - 在视频上方，840x1256 比例 */}
+                      {/* 容器：动态宽度，左右分屏效果 */}
                       <div 
-                        className="relative z-10 overflow-hidden transition-opacity duration-700" 
+                        className="relative overflow-hidden transition-all duration-700" 
                         style={{ 
-                          width: '210px', 
-                          height: '314px',
-                          opacity: playingVideos.has(num) ? 0 : 1
+                          width: playingVideos.has(num) ? '420px' : '210px',
+                          height: '314px' 
                         }}
                       >
-                        <img
-                          src={`/Landing_Page_hero_image/1 (${num}).png`}
-                          alt={`Fashion ${num}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
+                        {/* 左侧：视频层 */}
+                        <div 
+                          className="absolute left-0 top-0 bottom-0 overflow-hidden transition-all duration-700"
+                          style={{
+                            width: playingVideos.has(num) ? '210px' : '0px',
+                            opacity: playingVideos.has(num) ? 1 : 0
+                          }}
+                        >
+                          <video
+                            ref={(el) => {
+                              if (el) videoRefs.current.set(num, el)
+                            }}
+                            className="w-full h-full object-cover"
+                            loop
+                            muted
+                            playsInline
+                            style={{ width: '210px', height: '314px' }}
+                          >
+                            <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
+                          </video>
+                        </div>
+                        
+                        {/* 右侧：图片层 */}
+                        <div 
+                          className="absolute top-0 bottom-0 overflow-hidden transition-all duration-700"
+                          style={{
+                            left: playingVideos.has(num) ? '210px' : '0px',
+                            width: '210px'
+                          }}
+                        >
+                          <img
+                            src={`/Landing_Page_hero_image/1 (${num}).png`}
+                            alt={`Fashion ${num}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                        </div>
+                        
+                        {/* Subtle Glow Effect on Hover */}
+                        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                       </div>
-                      
-                      {/* Subtle Glow Effect on Hover */}
-                      <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                     </div>
                   </div>
                 ))}
@@ -282,39 +315,54 @@ export default function LandingPage() {
                     data-item-num={num + 10}
                   >
                     <div className="relative group">
-                      {/* Video Layer - 在图片下方 */}
-                      <div className="absolute inset-0 z-0 overflow-hidden" style={{ width: '210px', height: '314px' }}>
-                        <video
-                          ref={(el) => {
-                            if (el) videoRefs.current.set(num + 10, el)
-                          }}
-                          className="w-full h-full object-cover"
-                          loop
-                          muted
-                          playsInline
-                        >
-                          <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
-                        </video>
-                      </div>
-                      
-                      {/* Image Container - 在视频上方 */}
+                      {/* 容器：动态宽度，左右分屏效果 */}
                       <div 
-                        className="relative z-10 overflow-hidden transition-opacity duration-700" 
+                        className="relative overflow-hidden transition-all duration-700" 
                         style={{ 
-                          width: '210px', 
-                          height: '314px',
-                          opacity: playingVideos.has(num + 10) ? 0 : 1
+                          width: playingVideos.has(num + 10) ? '420px' : '210px',
+                          height: '314px' 
                         }}
                       >
-                        <img
-                          src={`/Landing_Page_hero_image/1 (${num}).png`}
-                          alt={`Fashion ${num}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
+                        {/* 左侧：视频层 */}
+                        <div 
+                          className="absolute left-0 top-0 bottom-0 overflow-hidden transition-all duration-700"
+                          style={{
+                            width: playingVideos.has(num + 10) ? '210px' : '0px',
+                            opacity: playingVideos.has(num + 10) ? 1 : 0
+                          }}
+                        >
+                          <video
+                            ref={(el) => {
+                              if (el) videoRefs.current.set(num + 10, el)
+                            }}
+                            className="w-full h-full object-cover"
+                            loop
+                            muted
+                            playsInline
+                            style={{ width: '210px', height: '314px' }}
+                          >
+                            <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
+                          </video>
+                        </div>
+                        
+                        {/* 右侧：图片层 */}
+                        <div 
+                          className="absolute top-0 bottom-0 overflow-hidden transition-all duration-700"
+                          style={{
+                            left: playingVideos.has(num + 10) ? '210px' : '0px',
+                            width: '210px'
+                          }}
+                        >
+                          <img
+                            src={`/Landing_Page_hero_image/1 (${num}).png`}
+                            alt={`Fashion ${num}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                        </div>
+                        
+                        {/* Subtle Glow Effect on Hover */}
+                        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                       </div>
-                      
-                      {/* Subtle Glow Effect on Hover */}
-                      <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                     </div>
                   </div>
                 ))}
@@ -756,7 +804,7 @@ export default function LandingPage() {
         .scrolling-content {
           display: flex;
           gap: 2rem;
-          animation: scroll-left 50s linear infinite;
+          animation: scroll-left 60s linear infinite;
           width: fit-content;
         }
 
