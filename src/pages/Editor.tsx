@@ -374,8 +374,10 @@ export default function Editor() {
           onClose={() => setShowLoginModal(false)}
           onLoginSuccess={() => {
             setShowLoginModal(false)
-            // 登录成功后可以自动触发生成
-            // handleGenerate()
+            // 登录成功后自动触发生成
+            setTimeout(() => {
+              handleGenerate()
+            }, 100)
           }}
         />
       )}

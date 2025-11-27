@@ -61,24 +61,23 @@ export default function UploadArea({ label, image, onChange, purpose = 'source' 
       )}
       
       {image ? (
-        <div className="relative">
-          {/* 图片容器 - 固定高度240px，完整显示不裁剪 */}
-          <div className="w-full h-[240px] bg-dark-card rounded-sm border border-dark-border flex items-center justify-center p-2">
+        <div className="relative group">
+          {/* 使用更高的容器，并确保图片完整显示且居中 */}
+          <div className="w-full aspect-[3/4] min-h-[240px] bg-dark-card rounded-sm border border-dark-border overflow-hidden flex items-center justify-center p-2">
             <img
               src={image}
               alt={label}
               className="max-w-full max-h-full object-contain"
+              style={{ width: 'auto', height: 'auto' }}
             />
           </div>
-          
-          {/* 悬停遮罩 - 重新上传按钮 */}
-          <div className="absolute inset-0 bg-dark/80 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-sm flex items-center justify-center pointer-events-none">
+          <div className="absolute inset-0 bg-dark/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-sm flex items-center justify-center">
             <button
               onClick={() => {
                 onChange(null)
                 setUploadError(null)
               }}
-              className="btn-secondary pointer-events-auto"
+              className="btn-secondary"
               disabled={isUploading}
             >
               重新上传
