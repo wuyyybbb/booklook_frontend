@@ -72,25 +72,44 @@ export default function LandingPage() {
     const checkItemPosition = () => {
       const items = document.querySelectorAll('.scrolling-item')
       const viewportCenter = window.innerWidth / 2
-      const centerThreshold = 150 // 中心线左右 150px 范围内算作"在中间"
+      const centerThreshold = 20 // 中心线左右 20px 范围内算作"在中间"（非常精确）
+      
+      let closestDistance = Infinity
+      let closestItemNum = 0
       
       items.forEach((item) => {
         const itemNum = parseInt(item.getAttribute('data-item-num') || '0')
         if (itemNum > 0) {
           const rect = item.getBoundingClientRect()
           const itemCenter = rect.left + rect.width / 2
+          const distanceFromCenter = Math.abs(itemCenter - viewportCenter)
+          
+          // 记录最接近中心的元素
+          if (distanceFromCenter < closestDistance) {
+            closestDistance = distanceFromCenter
+            closestItemNum = itemNum
+          }
           
           // 检测元素中心是否在视口中心附近
-          const isInCenter = Math.abs(itemCenter - viewportCenter) < centerThreshold
+          const isInCenter = distanceFromCenter < centerThreshold
           
-          // 调试日志（可以在开发时查看）
+          // 详细调试日志
           if (isInCenter && !playingVideos.has(itemNum)) {
-            console.log(`Item ${itemNum} reached center, playing video...`)
+            console.log(`✅ Item ${itemNum} reached center!`)
+            console.log(`   📍 Item center: ${itemCenter.toFixed(0)}px`)
+            console.log(`   📍 Viewport center: ${viewportCenter.toFixed(0)}px`)
+            console.log(`   📏 Distance: ${distanceFromCenter.toFixed(0)}px (threshold: ${centerThreshold}px)`)
+            console.log(`   🎬 Starting video for: 1 (${itemNum > 10 ? itemNum - 10 : itemNum}).webm`)
           }
           
           handleVideoPlayback(itemNum, isInCenter)
         }
       })
+      
+      // 每秒输出一次最接近中心的元素（帮助调试）
+      if (closestItemNum > 0 && Math.random() < 0.1) { // 10% 概率输出，避免刷屏
+        console.log(`🎯 Closest to center: Item ${closestItemNum} (${closestDistance.toFixed(0)}px away)`)
+      }
     }
 
     // 初始检查
