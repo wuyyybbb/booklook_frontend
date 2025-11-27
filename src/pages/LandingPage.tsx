@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import LoginModal from '../components/auth/LoginModal'
 import { getUserInfo, clearAuthInfo, isLoggedIn, type UserInfo } from '../api/auth'
 
@@ -8,6 +8,8 @@ export default function LandingPage() {
   const [user, setUser] = useState<UserInfo | null>(null)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null) // 选中的套餐
+  const [playingVideos, setPlayingVideos] = useState<Set<number>>(new Set()) // 正在播放的视频
+  const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map()) // 视频元素引用
 
   // 页面加载时检查登录状态
   useEffect(() => {
@@ -37,6 +39,52 @@ export default function LandingPage() {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
+
+  // 处理视频播放/暂停
+  const handleVideoPlayback = useCallback((itemNum: number, shouldPlay: boolean) => {
+    const video = videoRefs.current.get(itemNum)
+    if (video) {
+      if (shouldPlay && video.paused) {
+        video.play().catch(err => console.log('Video play failed:', err))
+        setPlayingVideos(prev => new Set(prev).add(itemNum))
+      } else if (!shouldPlay && !video.paused) {
+        video.pause()
+        video.currentTime = 0 // 重置视频到开始
+        setPlayingVideos(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(itemNum)
+          return newSet
+        })
+      }
+    }
+  }, [])
+
+  // 监听滚动，检测元素是否在屏幕中间
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const itemNum = parseInt(entry.target.getAttribute('data-item-num') || '0')
+          if (itemNum > 0) {
+            // 当元素与视口中心区域相交时播放视频
+            const isInCenter = entry.isIntersecting && entry.intersectionRatio > 0.5
+            handleVideoPlayback(itemNum, isInCenter)
+          }
+        })
+      },
+      {
+        root: null,
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+        rootMargin: '-25% 0px -25% 0px' // 检测元素是否在屏幕中间 50% 区域
+      }
+    )
+
+    // 观察所有滚动项
+    const items = document.querySelectorAll('.scrolling-item')
+    items.forEach(item => observer.observe(item))
+
+    return () => observer.disconnect()
+  }, [handleVideoPlayback])
 
   return (
     <div className="min-h-screen bg-dark">
@@ -182,45 +230,91 @@ export default function LandingPage() {
             <div className="scrolling-wrapper py-8">
               <div className="scrolling-content">
                 {/* First Set */}
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                   <div
                     key={`first-${num}`}
                     className="scrolling-item"
+                    data-item-num={num}
                   >
                     <div className="relative group">
-                      {/* Image Container - 无边框，840x1256 比例 */}
-                      <div className="overflow-hidden" style={{ width: '210px', height: '314px' }}>
+                      {/* Video Layer - 在图片下方，当滚动到中间时播放 */}
+                      <div className="absolute inset-0 z-0 overflow-hidden" style={{ width: '210px', height: '314px' }}>
+                        <video
+                          ref={(el) => {
+                            if (el) videoRefs.current.set(num, el)
+                          }}
+                          className="w-full h-full object-cover"
+                          loop
+                          muted
+                          playsInline
+                        >
+                          <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
+                        </video>
+                      </div>
+                      
+                      {/* Image Container - 在视频上方，840x1256 比例 */}
+                      <div 
+                        className="relative z-10 overflow-hidden transition-opacity duration-700" 
+                        style={{ 
+                          width: '210px', 
+                          height: '314px',
+                          opacity: playingVideos.has(num) ? 0 : 1
+                        }}
+                      >
                         <img
-                          src={`/landing/1 (${num}).png`}
+                          src={`/Landing_Page_hero_image/1 (${num}).png`}
                           alt={`Fashion ${num}`}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                       </div>
                       
                       {/* Subtle Glow Effect on Hover */}
-                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500"></div>
+                      <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                     </div>
                   </div>
                 ))}
                 
                 {/* Duplicate Set for Seamless Loop */}
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                   <div
                     key={`second-${num}`}
                     className="scrolling-item"
+                    data-item-num={num + 10}
                   >
                     <div className="relative group">
-                      {/* Image Container - 无边框，840x1256 比例 */}
-                      <div className="overflow-hidden" style={{ width: '210px', height: '314px' }}>
+                      {/* Video Layer - 在图片下方 */}
+                      <div className="absolute inset-0 z-0 overflow-hidden" style={{ width: '210px', height: '314px' }}>
+                        <video
+                          ref={(el) => {
+                            if (el) videoRefs.current.set(num + 10, el)
+                          }}
+                          className="w-full h-full object-cover"
+                          loop
+                          muted
+                          playsInline
+                        >
+                          <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
+                        </video>
+                      </div>
+                      
+                      {/* Image Container - 在视频上方 */}
+                      <div 
+                        className="relative z-10 overflow-hidden transition-opacity duration-700" 
+                        style={{ 
+                          width: '210px', 
+                          height: '314px',
+                          opacity: playingVideos.has(num + 10) ? 0 : 1
+                        }}
+                      >
                         <img
-                          src={`/landing/1 (${num}).png`}
+                          src={`/Landing_Page_hero_image/1 (${num}).png`}
                           alt={`Fashion ${num}`}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                       </div>
                       
                       {/* Subtle Glow Effect on Hover */}
-                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500"></div>
+                      <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                     </div>
                   </div>
                 ))}
@@ -662,7 +756,7 @@ export default function LandingPage() {
         .scrolling-content {
           display: flex;
           gap: 2rem;
-          animation: scroll-left 40s linear infinite;
+          animation: scroll-left 50s linear infinite;
           width: fit-content;
         }
 
