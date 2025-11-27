@@ -7,11 +7,13 @@ import MobilePreview from '../components/editor/MobilePreview'
 import MobileControls from '../components/editor/MobileControls'
 import HistorySidebar from '../components/editor/HistorySidebar'
 import UserMenu from '../components/header/UserMenu'
+import LoginModal from '../components/auth/LoginModal'
 import { UploadResult } from '../components/editor/UploadArea'
 import { createTask, EditMode as ApiEditMode, TaskStatus, TaskInfo, TaskError } from '../api/tasks'
 import { useTaskPolling } from '../hooks/useTaskPolling'
 import { getImageUrl } from '../api/upload'
 import { formatErrorDisplay, isRetryableError } from '../utils/errorMessages'
+import { isLoggedIn } from '../api/auth'
 
 export type EditMode = 'HEAD_SWAP' | 'BACKGROUND_CHANGE' | 'POSE_CHANGE'
 
@@ -46,6 +48,7 @@ export default function Editor() {
   const [taskError, setTaskError] = useState<TaskError | null>(null)
   const [processingTime, setProcessingTime] = useState<number | undefined>(undefined)
   const [historyKey, setHistoryKey] = useState(0) // 用于触发历史记录刷新
+  const [showLoginModal, setShowLoginModal] = useState(false) // 控制登录弹窗
   
   // 处理原图上传
   const handleSourceUpload = (result: UploadResult | null) => {
@@ -158,6 +161,12 @@ export default function Editor() {
   
   // 处理生成按钮点击
   const handleGenerate = async () => {
+    // 0. 检查用户是否已登录
+    if (!isLoggedIn()) {
+      setShowLoginModal(true)
+      return
+    }
+    
     // 1. 验证必要的图片已上传
     if (!sourceFileId) {
       alert('请先上传原始图片')
@@ -357,6 +366,19 @@ export default function Editor() {
           />
         </div>
       </div>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onLoginSuccess={() => {
+            setShowLoginModal(false)
+            // 登录成功后可以自动触发生成
+            // handleGenerate()
+          }}
+        />
+      )}
     </div>
   )
 }
