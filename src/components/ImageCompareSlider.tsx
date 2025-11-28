@@ -79,7 +79,7 @@ export default function ImageCompareSlider({
       onTouchStart={handleMouseDown}
       style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
-      {/* After Image (Full) - 原图（下层） */}
+      {/* After Image (Full) - 下层 */}
       <div className="absolute inset-0">
         <img 
           src={afterImage} 
@@ -96,7 +96,7 @@ export default function ImageCompareSlider({
         </div>
       </div>
 
-      {/* Before Image (Clipped) - AI处理（上层） */}
+      {/* Before Image (Clipped) - 上层 */}
       <div 
         className="absolute inset-0"
         style={{

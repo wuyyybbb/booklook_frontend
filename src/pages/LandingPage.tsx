@@ -528,8 +528,8 @@ export default function LandingPage() {
                 <ImageCompareSlider
                   beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
                   afterImage={`/Landing_Page_compare_image/${num}.png`}
-                  beforeLabel="AI 处理"
-                  afterLabel="原图"
+                  beforeLabel="原图"
+                  afterLabel="AI 处理"
                 />
                 <div className="mt-3 text-center">
                   <p className="text-xs text-text-tertiary">{name}</p>
@@ -852,10 +852,6 @@ export default function LandingPage() {
           gap: 2rem;
           animation: scroll-left 60s linear infinite;
           width: fit-content;
-        }
-
-        .scrolling-content:hover {
-          animation-play-state: paused;
         }
 
         .scrolling-item {
