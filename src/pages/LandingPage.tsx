@@ -511,8 +511,19 @@ export default function LandingPage() {
           
           {/* Comparison Grid - 2 rows x 5 columns */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-[1400px] mx-auto">
-            {/* Generate 10 comparison sliders */}
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+            {/* Generate 10 comparison sliders with specific names */}
+            {[
+              { num: 1, name: '岩石海岸风光' },
+              { num: 2, name: '海滨沙滩写真' },
+              { num: 3, name: '海边礁石景致' },
+              { num: 4, name: '都市街拍风尚' },
+              { num: 5, name: '山林自然风光' },
+              { num: 6, name: '庭院园林风景' },
+              { num: 7, name: '峡谷地貌奇观' },
+              { num: 8, name: '红土地质公园' },
+              { num: 9, name: '海岸礁石风光' },
+              { num: 10, name: '海景沙滩风情' }
+            ].map(({ num, name }) => (
               <div key={num} className="group">
                 <ImageCompareSlider
                   beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
@@ -521,7 +532,7 @@ export default function LandingPage() {
                   afterLabel="原图"
                 />
                 <div className="mt-3 text-center">
-                  <p className="text-xs text-text-tertiary">案例 {num}</p>
+                  <p className="text-xs text-text-tertiary">{name}</p>
                 </div>
               </div>
             ))}

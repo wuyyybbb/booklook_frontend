@@ -79,7 +79,7 @@ export default function ImageCompareSlider({
       onTouchStart={handleMouseDown}
       style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
-      {/* After Image (Full) - AI 处理 */}
+      {/* After Image (Full) - 原图（下层） */}
       <div className="absolute inset-0">
         <img 
           src={afterImage} 
@@ -87,13 +87,16 @@ export default function ImageCompareSlider({
           className="w-full h-full object-cover"
           draggable={false}
         />
-        {/* After Label - 左上角 */}
-        <div className="absolute top-4 left-4 px-3 py-1 bg-primary/90 text-dark text-sm font-medium rounded-full">
+        {/* After Label - 右上角，深灰色背景 */}
+        <div 
+          className="absolute top-4 right-4 px-3 py-1 text-white text-sm font-medium rounded-full"
+          style={{ backgroundColor: '#111111' }}
+        >
           {afterLabel}
         </div>
       </div>
 
-      {/* Before Image (Clipped) - 原图 */}
+      {/* Before Image (Clipped) - AI处理（上层） */}
       <div 
         className="absolute inset-0"
         style={{
@@ -106,11 +109,8 @@ export default function ImageCompareSlider({
           className="w-full h-full object-cover"
           draggable={false}
         />
-        {/* Before Label - 右上角，深灰色背景 */}
-        <div 
-          className="absolute top-4 right-4 px-3 py-1 text-white text-sm font-medium rounded-full"
-          style={{ backgroundColor: '#111111' }}
-        >
+        {/* Before Label - 左上角，绿色背景 */}
+        <div className="absolute top-4 left-4 px-3 py-1 bg-primary text-dark text-sm font-medium rounded-full">
           {beforeLabel}
         </div>
       </div>
