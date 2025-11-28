@@ -511,11 +511,19 @@ export default function LandingPage() {
           
           {/* Scrolling Grid Container with Fade Effect - Desktop Only */}
           <div className="relative max-w-[1400px] mx-auto hidden lg:block">
-            {/* Top Fade Gradient */}
-            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-dark-card/30 via-dark-card/30 to-transparent z-10 pointer-events-none"></div>
+            {/* Top Fade Gradient - 更强的淡出效果 */}
+            <div className="absolute top-0 left-0 right-0 h-48 z-10 pointer-events-none"
+                 style={{
+                   background: 'linear-gradient(to bottom, rgba(23, 23, 23, 1) 0%, rgba(23, 23, 23, 0.9) 20%, rgba(23, 23, 23, 0.6) 40%, rgba(23, 23, 23, 0.3) 60%, rgba(23, 23, 23, 0.1) 80%, transparent 100%)'
+                 }}>
+            </div>
             
-            {/* Bottom Fade Gradient */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-dark-card/30 via-dark-card/30 to-transparent z-10 pointer-events-none"></div>
+            {/* Bottom Fade Gradient - 更强的淡出效果 */}
+            <div className="absolute bottom-0 left-0 right-0 h-48 z-10 pointer-events-none"
+                 style={{
+                   background: 'linear-gradient(to top, rgba(23, 23, 23, 1) 0%, rgba(23, 23, 23, 0.9) 20%, rgba(23, 23, 23, 0.6) 40%, rgba(23, 23, 23, 0.3) 60%, rgba(23, 23, 23, 0.1) 80%, transparent 100%)'
+                 }}>
+            </div>
             
             {/* Scrolling Columns */}
             <div className="flex gap-6 h-[800px] overflow-hidden">
