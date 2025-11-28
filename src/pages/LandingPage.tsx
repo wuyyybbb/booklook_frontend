@@ -500,7 +500,7 @@ export default function LandingPage() {
       </section>
 
       {/* Case Studies - Before/After Comparison */}
-      <section className="py-20 bg-dark-card/30">
+      <section className="py-20 bg-dark-card/30 overflow-hidden">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="title-h2 mb-4">案例展示</h2>
@@ -509,20 +509,147 @@ export default function LandingPage() {
             </p>
           </div>
           
-          {/* Comparison Grid - 2 rows x 5 columns */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-[1400px] mx-auto">
-            {/* Generate 10 comparison sliders with specific names */}
+          {/* Scrolling Grid Container with Fade Effect - Desktop Only */}
+          <div className="relative max-w-[1400px] mx-auto hidden lg:block">
+            {/* Top Fade Gradient */}
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-dark-card/30 via-dark-card/30 to-transparent z-10 pointer-events-none"></div>
+            
+            {/* Bottom Fade Gradient */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-dark-card/30 via-dark-card/30 to-transparent z-10 pointer-events-none"></div>
+            
+            {/* Scrolling Columns */}
+            <div className="flex gap-6 h-[800px] overflow-hidden">
+              {/* Column 1 - Scroll Up */}
+              <div className="flex-1 animate-scroll-up">
+                <div className="flex flex-col gap-6">
+                  {[
+                    { num: 1, name: '岩石海岸风光' },
+                    { num: 6, name: '庭院园林风景' },
+                    { num: 1, name: '岩石海岸风光' },
+                    { num: 6, name: '庭院园林风景' }
+                  ].map(({ num, name }, idx) => (
+                    <div key={`col1-${idx}`} className="group flex-shrink-0">
+                      <ImageCompareSlider
+                        beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
+                        afterImage={`/Landing_Page_compare_image/${num}.png`}
+                        beforeLabel="原图"
+                        afterLabel="AI 处理"
+                      />
+                      <div className="mt-3 text-center">
+                        <p className="text-xs text-text-tertiary">{name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Column 2 - Scroll Down */}
+              <div className="flex-1 animate-scroll-down">
+                <div className="flex flex-col gap-6">
+                  {[
+                    { num: 2, name: '海滨沙滩写真' },
+                    { num: 7, name: '峡谷地貌奇观' },
+                    { num: 2, name: '海滨沙滩写真' },
+                    { num: 7, name: '峡谷地貌奇观' }
+                  ].map(({ num, name }, idx) => (
+                    <div key={`col2-${idx}`} className="group flex-shrink-0">
+                      <ImageCompareSlider
+                        beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
+                        afterImage={`/Landing_Page_compare_image/${num}.png`}
+                        beforeLabel="原图"
+                        afterLabel="AI 处理"
+                      />
+                      <div className="mt-3 text-center">
+                        <p className="text-xs text-text-tertiary">{name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Column 3 - Scroll Up */}
+              <div className="flex-1 animate-scroll-up">
+                <div className="flex flex-col gap-6">
+                  {[
+                    { num: 3, name: '海边礁石景致' },
+                    { num: 8, name: '红土地质公园' },
+                    { num: 3, name: '海边礁石景致' },
+                    { num: 8, name: '红土地质公园' }
+                  ].map(({ num, name }, idx) => (
+                    <div key={`col3-${idx}`} className="group flex-shrink-0">
+                      <ImageCompareSlider
+                        beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
+                        afterImage={`/Landing_Page_compare_image/${num}.png`}
+                        beforeLabel="原图"
+                        afterLabel="AI 处理"
+                      />
+                      <div className="mt-3 text-center">
+                        <p className="text-xs text-text-tertiary">{name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Column 4 - Scroll Down */}
+              <div className="flex-1 animate-scroll-down">
+                <div className="flex flex-col gap-6">
+                  {[
+                    { num: 4, name: '都市街拍风尚' },
+                    { num: 9, name: '海岸礁石风光' },
+                    { num: 4, name: '都市街拍风尚' },
+                    { num: 9, name: '海岸礁石风光' }
+                  ].map(({ num, name }, idx) => (
+                    <div key={`col4-${idx}`} className="group flex-shrink-0">
+                      <ImageCompareSlider
+                        beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
+                        afterImage={`/Landing_Page_compare_image/${num}.png`}
+                        beforeLabel="原图"
+                        afterLabel="AI 处理"
+                      />
+                      <div className="mt-3 text-center">
+                        <p className="text-xs text-text-tertiary">{name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Column 5 - Scroll Up */}
+              <div className="flex-1 animate-scroll-up">
+                <div className="flex flex-col gap-6">
+                  {[
+                    { num: 5, name: '山林自然风光' },
+                    { num: 10, name: '海景沙滩风情' },
+                    { num: 5, name: '山林自然风光' },
+                    { num: 10, name: '海景沙滩风情' }
+                  ].map(({ num, name }, idx) => (
+                    <div key={`col5-${idx}`} className="group flex-shrink-0">
+                      <ImageCompareSlider
+                        beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
+                        afterImage={`/Landing_Page_compare_image/${num}.png`}
+                        beforeLabel="原图"
+                        afterLabel="AI 处理"
+                      />
+                      <div className="mt-3 text-center">
+                        <p className="text-xs text-text-tertiary">{name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Static Grid for Mobile/Tablet */}
+          <div className="lg:hidden grid grid-cols-2 md:grid-cols-3 gap-6">
             {[
               { num: 1, name: '岩石海岸风光' },
               { num: 2, name: '海滨沙滩写真' },
               { num: 3, name: '海边礁石景致' },
               { num: 4, name: '都市街拍风尚' },
               { num: 5, name: '山林自然风光' },
-              { num: 6, name: '庭院园林风景' },
-              { num: 7, name: '峡谷地貌奇观' },
-              { num: 8, name: '红土地质公园' },
-              { num: 9, name: '海岸礁石风光' },
-              { num: 10, name: '海景沙滩风情' }
+              { num: 6, name: '庭院园林风景' }
             ].map(({ num, name }) => (
               <div key={num} className="group">
                 <ImageCompareSlider
@@ -840,6 +967,32 @@ export default function LandingPage() {
           100% {
             transform: translateX(-50%);
           }
+        }
+
+        @keyframes scroll-up {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-50%);
+          }
+        }
+
+        @keyframes scroll-down {
+          0% {
+            transform: translateY(-50%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+
+        .animate-scroll-up {
+          animation: scroll-up 30s linear infinite;
+        }
+
+        .animate-scroll-down {
+          animation: scroll-down 30s linear infinite;
         }
 
         .scrolling-wrapper {
