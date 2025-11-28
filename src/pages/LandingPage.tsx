@@ -266,7 +266,7 @@ export default function LandingPage() {
             {/* Scrolling Images Container */}
             <div className="scrolling-wrapper py-8">
               <div className="scrolling-content">
-                {/* First Set */}
+                {/* First Set - 图片 1 到 10 */}
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                   <div
                     key={`first-${num}`}
@@ -274,7 +274,7 @@ export default function LandingPage() {
                     data-item-num={num}
                   >
                     <div className="relative group">
-                      {/* 容器：固定宽度，图片和视频重叠 */}
+                      {/* 容器：固定宽度 210px x 314px */}
                       <div 
                         className="relative overflow-hidden" 
                         style={{ 
@@ -282,7 +282,7 @@ export default function LandingPage() {
                           height: '314px' 
                         }}
                       >
-                        {/* 底层：视频（z-index: 0） */}
+                        {/* 底层：视频 - z-index: 0 */}
                         <div className="absolute inset-0 z-0">
                           <video
                             ref={(el) => {
@@ -293,34 +293,27 @@ export default function LandingPage() {
                             muted
                             playsInline
                           >
-                            <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
+                            <source src={`/Landing_Page_hero_webm/${num}.webm`} type="video/webm" />
                           </video>
                         </div>
                         
-                        {/* 上层：图片（z-index: 10），通过 clip-path 控制显示区域 */}
-                        <div 
-                          className="absolute inset-0 z-10 transition-all duration-700"
-                          style={{
-                            clipPath: playingVideos.has(num) 
-                              ? 'inset(0 0 0 50%)' // 只显示右半部分（左侧被裁剪，露出视频）
-                              : 'inset(0 0 0 0)'   // 显示全部（覆盖视频）
-                          }}
-                        >
+                        {/* 上层：图片 - z-index: 10，完全重叠在视频上方 */}
+                        <div className="absolute inset-0 z-10">
                           <img
-                            src={`/Landing_Page_hero_image/1 (${num}).png`}
+                            src={`/Landing_Page_hero_image/${num}.png`}
                             alt={`Fashion ${num}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         
-                        {/* Subtle Glow Effect on Hover */}
+                        {/* Hover 效果 */}
                         <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                       </div>
                     </div>
                   </div>
                 ))}
                 
-                {/* Duplicate Set for Seamless Loop */}
+                {/* Second Set - 重复 1 到 10，用于无缝循环 */}
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                   <div
                     key={`second-${num}`}
@@ -328,7 +321,7 @@ export default function LandingPage() {
                     data-item-num={num + 10}
                   >
                     <div className="relative group">
-                      {/* 容器：固定宽度，图片和视频重叠 */}
+                      {/* 容器：固定宽度 210px x 314px */}
                       <div 
                         className="relative overflow-hidden" 
                         style={{ 
@@ -336,7 +329,7 @@ export default function LandingPage() {
                           height: '314px' 
                         }}
                       >
-                        {/* 底层：视频（z-index: 0） */}
+                        {/* 底层：视频 - z-index: 0 */}
                         <div className="absolute inset-0 z-0">
                           <video
                             ref={(el) => {
@@ -347,27 +340,20 @@ export default function LandingPage() {
                             muted
                             playsInline
                           >
-                            <source src={`/Landing_Page_hero_webm/1 (${num}).webm`} type="video/webm" />
+                            <source src={`/Landing_Page_hero_webm/${num}.webm`} type="video/webm" />
                           </video>
                         </div>
                         
-                        {/* 上层：图片（z-index: 10），通过 clip-path 控制显示区域 */}
-                        <div 
-                          className="absolute inset-0 z-10 transition-all duration-700"
-                          style={{
-                            clipPath: playingVideos.has(num + 10) 
-                              ? 'inset(0 0 0 50%)' // 只显示右半部分（左侧被裁剪，露出视频）
-                              : 'inset(0 0 0 0)'   // 显示全部（覆盖视频）
-                          }}
-                        >
+                        {/* 上层：图片 - z-index: 10，完全重叠在视频上方 */}
+                        <div className="absolute inset-0 z-10">
                           <img
-                            src={`/Landing_Page_hero_image/1 (${num}).png`}
+                            src={`/Landing_Page_hero_image/${num}.png`}
                             alt={`Fashion ${num}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         
-                        {/* Subtle Glow Effect on Hover */}
+                        {/* Hover 效果 */}
                         <div className="absolute inset-0 z-20 bg-primary/0 group-hover:bg-primary/5 transition-all duration-500 pointer-events-none"></div>
                       </div>
                     </div>
