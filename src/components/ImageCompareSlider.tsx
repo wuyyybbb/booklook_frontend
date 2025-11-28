@@ -49,12 +49,20 @@ export default function ImageCompareSlider({
 
   useEffect(() => {
     if (isDragging) {
+      // 禁用文本选择
+      document.body.style.userSelect = 'none'
+      document.body.style.webkitUserSelect = 'none'
+      
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
       document.addEventListener('touchmove', handleTouchMove)
       document.addEventListener('touchend', handleMouseUp)
       
       return () => {
+        // 恢复文本选择
+        document.body.style.userSelect = ''
+        document.body.style.webkitUserSelect = ''
+        
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
         document.removeEventListener('touchmove', handleTouchMove)
@@ -66,9 +74,10 @@ export default function ImageCompareSlider({
   return (
     <div 
       ref={containerRef}
-      className="relative w-full aspect-[3/4] overflow-hidden rounded-lg border border-dark-border bg-dark-card cursor-ew-resize group"
+      className="relative w-full aspect-[3/4] overflow-hidden rounded-lg border border-dark-border bg-dark-card cursor-ew-resize group select-none"
       onMouseDown={handleMouseDown}
       onTouchStart={handleMouseDown}
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
       {/* After Image (Full) */}
       <div className="absolute inset-0">

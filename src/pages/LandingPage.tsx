@@ -509,10 +509,10 @@ export default function LandingPage() {
             </p>
           </div>
           
-          {/* Comparison Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {/* Generate 9 comparison sliders */}
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+          {/* Comparison Grid - 2 rows x 5 columns */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-[1400px] mx-auto">
+            {/* Generate 10 comparison sliders */}
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
               <div key={num} className="group">
                 <ImageCompareSlider
                   beforeImage={`/Landing_Page_compare_image/${num}.png`}
@@ -520,8 +520,8 @@ export default function LandingPage() {
                   beforeLabel="原图"
                   afterLabel="AI 处理"
                 />
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-text-tertiary">案例 {num}</p>
+                <div className="mt-3 text-center">
+                  <p className="text-xs text-text-tertiary">案例 {num}</p>
                 </div>
               </div>
             ))}
