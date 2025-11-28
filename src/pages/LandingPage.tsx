@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import LoginModal from '../components/auth/LoginModal'
+import ImageCompareSlider from '../components/ImageCompareSlider'
 import { getUserInfo, clearAuthInfo, isLoggedIn, type UserInfo } from '../api/auth'
 
 export default function LandingPage() {
@@ -494,6 +495,36 @@ export default function LandingPage() {
                 姿态迁移技术，自由改变模特动作与姿势，创造更多展示可能性
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Case Studies - Before/After Comparison */}
+      <section className="py-20 bg-dark-card/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="title-h2 mb-4">案例展示</h2>
+            <p className="text-text-secondary text-lg max-w-2xl mx-auto">
+              拖动中间滑块，查看 AI 处理前后的效果对比
+            </p>
+          </div>
+          
+          {/* Comparison Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {/* Generate 9 comparison sliders */}
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+              <div key={num} className="group">
+                <ImageCompareSlider
+                  beforeImage={`/Landing_Page_compare_image/${num}.png`}
+                  afterImage={`/Landing_Page_compare_image/${num}-1.png`}
+                  beforeLabel="原图"
+                  afterLabel="AI 处理"
+                />
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-text-tertiary">案例 {num}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
