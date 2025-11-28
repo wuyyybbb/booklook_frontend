@@ -79,7 +79,7 @@ export default function ImageCompareSlider({
       onTouchStart={handleMouseDown}
       style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
-      {/* After Image (Full) */}
+      {/* After Image (Full) - AI 处理 */}
       <div className="absolute inset-0">
         <img 
           src={afterImage} 
@@ -87,13 +87,13 @@ export default function ImageCompareSlider({
           className="w-full h-full object-cover"
           draggable={false}
         />
-        {/* After Label */}
-        <div className="absolute top-4 right-4 px-3 py-1 bg-primary/90 text-dark text-sm font-medium rounded-full">
+        {/* After Label - 左上角 */}
+        <div className="absolute top-4 left-4 px-3 py-1 bg-primary/90 text-dark text-sm font-medium rounded-full">
           {afterLabel}
         </div>
       </div>
 
-      {/* Before Image (Clipped) */}
+      {/* Before Image (Clipped) - 原图 */}
       <div 
         className="absolute inset-0"
         style={{
@@ -106,26 +106,32 @@ export default function ImageCompareSlider({
           className="w-full h-full object-cover"
           draggable={false}
         />
-        {/* Before Label */}
-        <div className="absolute top-4 left-4 px-3 py-1 bg-accent/90 text-dark text-sm font-medium rounded-full">
+        {/* Before Label - 右上角，深灰色背景 */}
+        <div 
+          className="absolute top-4 right-4 px-3 py-1 text-white text-sm font-medium rounded-full"
+          style={{ backgroundColor: '#111111' }}
+        >
           {beforeLabel}
         </div>
       </div>
 
-      {/* Slider Line & Handle */}
+      {/* Slider Line & Handle - 弱化样式 */}
       <div 
-        className="absolute top-0 bottom-0 w-1 bg-primary group-hover:w-1.5 transition-all"
-        style={{ left: `${sliderPosition}%` }}
+        className="absolute top-0 bottom-0 bg-primary/20 group-hover:bg-primary/30 transition-all"
+        style={{ 
+          left: `${sliderPosition}%`,
+          width: '2px'
+        }}
       >
-        {/* Slider Handle */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-primary rounded-full border-4 border-dark shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+        {/* Slider Handle - 缩小按钮 */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-primary/30 rounded-full border-2 border-primary/50 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/40 transition-all">
           {/* Left Arrow */}
-          <svg className="w-4 h-4 text-dark -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
+          <svg className="w-3 h-3 text-white -ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
           </svg>
           {/* Right Arrow */}
-          <svg className="w-4 h-4 text-dark -mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+          <svg className="w-3 h-3 text-white -mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
           </svg>
         </div>
       </div>

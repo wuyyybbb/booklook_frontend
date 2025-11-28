@@ -515,10 +515,10 @@ export default function LandingPage() {
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
               <div key={num} className="group">
                 <ImageCompareSlider
-                  beforeImage={`/Landing_Page_compare_image/${num}.png`}
-                  afterImage={`/Landing_Page_compare_image/${num}-1.png`}
-                  beforeLabel="原图"
-                  afterLabel="AI 处理"
+                  beforeImage={`/Landing_Page_compare_image/${num}-1.png`}
+                  afterImage={`/Landing_Page_compare_image/${num}.png`}
+                  beforeLabel="AI 处理"
+                  afterLabel="原图"
                 />
                 <div className="mt-3 text-center">
                   <p className="text-xs text-text-tertiary">案例 {num}</p>
