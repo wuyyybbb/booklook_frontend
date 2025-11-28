@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import LoginModal from '../components/auth/LoginModal'
 import ImageCompareSlider from '../components/ImageCompareSlider'
+import PoseExampleGallery from '../components/PoseExampleGallery'
 import { getUserInfo, clearAuthInfo, isLoggedIn, type UserInfo } from '../api/auth'
 
 export default function LandingPage() {
@@ -491,9 +492,12 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="title-h3 mb-3 text-primary">AI 换姿势</h3>
-              <p className="text-text-secondary leading-relaxed">
+              <p className="text-text-secondary leading-relaxed mb-6">
                 姿态迁移技术，自由改变模特动作与姿势，创造更多展示可能性
               </p>
+              
+              {/* 展示案例 */}
+              <PoseExampleGallery totalGroups={3} />
             </div>
           </div>
         </div>
