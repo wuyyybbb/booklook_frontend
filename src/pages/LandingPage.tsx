@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import LoginModal from '../components/auth/LoginModal'
 import { getUserInfo, clearAuthInfo, isLoggedIn, type UserInfo } from '../api/auth'
 
@@ -40,88 +40,89 @@ export default function LandingPage() {
     }
   }
 
-  // 处理视频播放/暂停
-  const handleVideoPlayback = useCallback((itemNum: number, shouldPlay: boolean) => {
-    const video = videoRefs.current.get(itemNum)
-    if (!video) return
 
-    if (shouldPlay) {
-      if (video.paused) {
-        video.play().catch(err => console.log('Video play failed:', err))
-      }
-      setPlayingVideos(prev => {
-        const newSet = new Set(prev)
-        newSet.add(itemNum)
-        return newSet
-      })
-    } else {
-      if (!video.paused) {
-        video.pause()
-        video.currentTime = 0 // 重置视频到开始
-      }
-      setPlayingVideos(prev => {
-        const newSet = new Set(prev)
-        newSet.delete(itemNum)
-        return newSet
-      })
-    }
-  }, [])
+  // 计算图片的 clip-path，实现渐进式透明效果
+  const [imageClipPaths, setImageClipPaths] = useState<Map<string, string>>(new Map())
 
-  // 监听滚动，检测元素是否在屏幕中间
+  // 监听滚动，动态计算每个图片的裁剪区域
   useEffect(() => {
-    const checkItemPosition = () => {
+    const updateClipPaths = () => {
       const items = document.querySelectorAll('.scrolling-item')
       const viewportCenter = window.innerWidth / 2
-      const centerThreshold = 20 // 中心线左右 20px 范围内算作"在中间"（非常精确）
-      
-      let closestDistance = Infinity
-      let closestItemNum = 0
+      const newClipPaths = new Map<string, string>()
+      const newPlayingVideos = new Set<number>()
       
       items.forEach((item) => {
         const itemNum = parseInt(item.getAttribute('data-item-num') || '0')
         if (itemNum > 0) {
           const rect = item.getBoundingClientRect()
-          const itemCenter = rect.left + rect.width / 2
-          const distanceFromCenter = Math.abs(itemCenter - viewportCenter)
+          const itemLeft = rect.left
+          const itemRight = rect.right
+          const itemWidth = rect.width
           
-          // 记录最接近中心的元素
-          if (distanceFromCenter < closestDistance) {
-            closestDistance = distanceFromCenter
-            closestItemNum = itemNum
+          // 判断图片是否跨越中心线
+          if (itemLeft < viewportCenter && itemRight > viewportCenter) {
+            // 图片正在经过中心线
+            // 计算中心线在图片中的相对位置（百分比）
+            const centerPositionInItem = (viewportCenter - itemLeft) / itemWidth
+            const clipPercentage = centerPositionInItem * 100
+            
+            // 使用 clip-path 只显示中心线右边的部分
+            // inset(top right bottom left)
+            newClipPaths.set(`img-${itemNum}`, `inset(0 0 0 ${clipPercentage}%)`)
+            
+            // 视频开始播放
+            newPlayingVideos.add(itemNum)
+            
+            // 调试日志
+            if (Math.random() < 0.05) { // 5% 概率输出
+              console.log(`📐 Item ${itemNum}: Center at ${clipPercentage.toFixed(1)}% | Left ${(100-clipPercentage).toFixed(1)}% = video, Right ${clipPercentage.toFixed(1)}% = image`)
+            }
+          } else if (itemRight <= viewportCenter) {
+            // 图片完全在中心线左边 - 完全裁剪（显示视频）
+            newClipPaths.set(`img-${itemNum}`, 'inset(0 100% 0 0)')
+            newPlayingVideos.add(itemNum)
+          } else {
+            // 图片完全在中心线右边 - 完全显示
+            newClipPaths.set(`img-${itemNum}`, 'inset(0 0 0 0)')
           }
-          
-          // 检测元素中心是否在视口中心附近
-          const isInCenter = distanceFromCenter < centerThreshold
-          
-          // 详细调试日志
-          if (isInCenter && !playingVideos.has(itemNum)) {
-            console.log(`✅ Item ${itemNum} reached center!`)
-            console.log(`   📍 Item center: ${itemCenter.toFixed(0)}px`)
-            console.log(`   📍 Viewport center: ${viewportCenter.toFixed(0)}px`)
-            console.log(`   📏 Distance: ${distanceFromCenter.toFixed(0)}px (threshold: ${centerThreshold}px)`)
-            console.log(`   🎬 Starting video for: 1 (${itemNum > 10 ? itemNum - 10 : itemNum}).webm`)
-          }
-          
-          handleVideoPlayback(itemNum, isInCenter)
         }
       })
       
-      // 每秒输出一次最接近中心的元素（帮助调试）
-      if (closestItemNum > 0 && Math.random() < 0.1) { // 10% 概率输出，避免刷屏
-        console.log(`🎯 Closest to center: Item ${closestItemNum} (${closestDistance.toFixed(0)}px away)`)
-      }
+      setImageClipPaths(newClipPaths)
+      
+      // 更新视频播放状态
+      newPlayingVideos.forEach(num => {
+        const video = videoRefs.current.get(num)
+        if (video && video.paused) {
+          video.play().catch(err => console.log('Video play failed:', err))
+        }
+      })
+      
+      // 停止不在中心的视频
+      playingVideos.forEach(num => {
+        if (!newPlayingVideos.has(num)) {
+          const video = videoRefs.current.get(num)
+          if (video && !video.paused) {
+            video.pause()
+            video.currentTime = 0
+          }
+        }
+      })
+      
+      setPlayingVideos(newPlayingVideos)
     }
 
-    // 初始检查
-    checkItemPosition()
+    // 初始更新
+    updateClipPaths()
 
-    // 监听动画，每帧检查位置
-    const interval = setInterval(checkItemPosition, 100) // 每 100ms 检查一次
+    // 持续更新（每 50ms 一次，更流畅）
+    const interval = setInterval(updateClipPaths, 50)
     
     return () => {
       clearInterval(interval)
     }
-  }, [handleVideoPlayback, playingVideos])
+  }, [])
 
   return (
     <div className="min-h-screen bg-dark">
@@ -297,8 +298,13 @@ export default function LandingPage() {
                           </video>
                         </div>
                         
-                        {/* 上层：图片 - z-index: 10，完全重叠在视频上方 */}
-                        <div className="absolute inset-0 z-10">
+                        {/* 上层：图片 - z-index: 10，使用 clip-path 动态裁剪 */}
+                        <div 
+                          className="absolute inset-0 z-10 transition-all duration-100"
+                          style={{
+                            clipPath: imageClipPaths.get(`img-${num}`) || 'inset(0 0 0 0)'
+                          }}
+                        >
                           <img
                             src={`/Landing_Page_hero_image/${num}.png`}
                             alt={`Fashion ${num}`}
@@ -344,8 +350,13 @@ export default function LandingPage() {
                           </video>
                         </div>
                         
-                        {/* 上层：图片 - z-index: 10，完全重叠在视频上方 */}
-                        <div className="absolute inset-0 z-10">
+                        {/* 上层：图片 - z-index: 10，使用 clip-path 动态裁剪 */}
+                        <div 
+                          className="absolute inset-0 z-10 transition-all duration-100"
+                          style={{
+                            clipPath: imageClipPaths.get(`img-${num + 10}`) || 'inset(0 0 0 0)'
+                          }}
+                        >
                           <img
                             src={`/Landing_Page_hero_image/${num}.png`}
                             alt={`Fashion ${num}`}
