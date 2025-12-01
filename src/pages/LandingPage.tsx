@@ -156,6 +156,12 @@ export default function LandingPage() {
                 功能
               </button>
               <button 
+                onClick={() => scrollToSection('cases')} 
+                className="text-text-secondary hover:text-primary transition-base"
+              >
+                案例
+              </button>
+              <button 
                 onClick={() => scrollToSection('pricing')} 
                 className="text-text-secondary hover:text-primary transition-base"
               >
@@ -240,7 +246,7 @@ export default function LandingPage() {
               </span>
             </h1>
             
-            <p className="text-text-secondary text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-text-secondary text-2xl md:text-4xl mb-12 max-w-3xl mx-auto leading-relaxed">
               专为服装人而生的商用级 AI
             </p>
             
@@ -502,7 +508,7 @@ export default function LandingPage() {
       </section>
 
       {/* Case Studies - Before/After Comparison */}
-      <section className="py-20 bg-dark-card/30 overflow-hidden">
+      <section id="cases" className="py-20 bg-dark-card/30 overflow-hidden">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="title-h2 mb-4">案例展示</h2>
