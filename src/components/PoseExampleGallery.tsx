@@ -39,17 +39,17 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
     <>
       {/* Compact Gallery View */}
       <div className="relative">
-        {/* 2x2 Grid */}
+        {/* 2x2 Grid - 3:4 比例适配全身照 */}
         <div 
           className="grid grid-cols-2 gap-2 cursor-pointer group"
           onClick={openModal}
         >
           {/* Origin - Top Left */}
-          <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all bg-dark-card">
             <img
               src={`/Landing_Page_example_change_pose/${currentGroup}/origin.jpg`}
               alt="Origin pose"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-contain"
             />
             <div className="absolute top-2 left-2 px-2 py-1 bg-dark/80 text-white text-xs rounded">
               原图
@@ -57,11 +57,11 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
           </div>
 
           {/* Image 1 - Top Right */}
-          <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all bg-dark-card">
             <img
               src={`/Landing_Page_example_change_pose/${currentGroup}/1.png`}
               alt="Pose 1"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-contain"
             />
             <div className="absolute top-2 left-2 px-2 py-1 bg-primary/80 text-dark text-xs rounded">
               效果1
@@ -69,11 +69,11 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
           </div>
 
           {/* Image 2 - Bottom Left */}
-          <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all bg-dark-card">
             <img
               src={`/Landing_Page_example_change_pose/${currentGroup}/2.png`}
               alt="Pose 2"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-contain"
             />
             <div className="absolute top-2 left-2 px-2 py-1 bg-primary/80 text-dark text-xs rounded">
               效果2
@@ -81,11 +81,11 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
           </div>
 
           {/* Image 3 - Bottom Right */}
-          <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border/50 group-hover:border-primary/50 transition-all bg-dark-card">
             <img
               src={`/Landing_Page_example_change_pose/${currentGroup}/3.png`}
               alt="Pose 3"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-contain"
             />
             <div className="absolute top-2 left-2 px-2 py-1 bg-primary/80 text-dark text-xs rounded">
               效果3
@@ -151,14 +151,14 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
               </svg>
             </button>
 
-            {/* Large 2x2 Grid */}
+            {/* Large 2x2 Grid - 3:4 比例适配全身照 */}
             <div className="grid grid-cols-2 gap-4 bg-dark-card p-4 rounded-lg border border-dark-border">
               {/* Origin - Top Left */}
-              <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/origin.jpg`}
                   alt="Origin pose"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1.5 bg-dark/90 text-white text-sm rounded">
                   原图
@@ -166,11 +166,11 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
               </div>
 
               {/* Image 1 - Top Right */}
-              <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/1.png`}
                   alt="Pose 1"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1.5 bg-primary/90 text-dark text-sm rounded">
                   效果1
@@ -178,11 +178,11 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
               </div>
 
               {/* Image 2 - Bottom Left */}
-              <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/2.png`}
                   alt="Pose 2"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1.5 bg-primary/90 text-dark text-sm rounded">
                   效果2
@@ -190,11 +190,11 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
               </div>
 
               {/* Image 3 - Bottom Right */}
-              <div className="relative aspect-square overflow-hidden rounded-sm border border-dark-border">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/3.png`}
                   alt="Pose 3"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1.5 bg-primary/90 text-dark text-sm rounded">
                   效果3

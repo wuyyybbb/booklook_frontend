@@ -486,18 +486,15 @@ export default function LandingPage() {
 
             {/* Feature 3 */}
             <div className="card-hover group">
-              <div className="aspect-square bg-gradient-to-br from-primary/10 to-dark-card rounded-lg mb-6 flex items-center justify-center overflow-hidden">
-                <svg className="w-24 h-24 text-primary group-hover:scale-110 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                </svg>
+              {/* 展示案例 - 替换原来的图标容器 */}
+              <div className="mb-6">
+                <PoseExampleGallery totalGroups={3} />
               </div>
+              
               <h3 className="title-h3 mb-3 text-primary">AI 换姿势</h3>
-              <p className="text-text-secondary leading-relaxed mb-6">
+              <p className="text-text-secondary leading-relaxed">
                 姿态迁移技术，自由改变模特动作与姿势，创造更多展示可能性
               </p>
-              
-              {/* 展示案例 */}
-              <PoseExampleGallery totalGroups={3} />
             </div>
           </div>
         </div>
