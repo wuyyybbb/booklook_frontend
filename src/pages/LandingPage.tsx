@@ -10,6 +10,7 @@ export default function LandingPage() {
   const [user, setUser] = useState<UserInfo | null>(null)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null) // 选中的套餐
+  const [showBetaModal, setShowBetaModal] = useState(false) // 内测弹窗
   const [playingVideos, setPlayingVideos] = useState<Set<number>>(new Set()) // 正在播放的视频
   const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map()) // 视频元素引用
 
@@ -705,7 +706,7 @@ export default function LandingPage() {
               </div>
 
               <button 
-                onClick={() => setSelectedPlan('starter')}
+                onClick={() => setShowBetaModal(true)}
                 className="w-full mb-6 px-8 py-3 bg-transparent border-2 border-text-primary text-text-primary hover:bg-text-primary hover:text-dark transition-all duration-300 rounded-sm"
               >
                 选择方案
@@ -751,7 +752,7 @@ export default function LandingPage() {
               </div>
 
               <button 
-                onClick={() => setSelectedPlan('basic')}
+                onClick={() => setShowBetaModal(true)}
                 className="w-full mb-6 px-8 py-3 bg-transparent border-2 border-text-primary text-text-primary hover:bg-text-primary hover:text-dark transition-all duration-300 rounded-sm"
               >
                 选择方案
@@ -807,7 +808,7 @@ export default function LandingPage() {
               </div>
 
               <button 
-                onClick={() => setSelectedPlan('pro')}
+                onClick={() => setShowBetaModal(true)}
                 className="w-full mb-6 px-8 py-3 bg-transparent border-2 border-text-primary text-text-primary hover:bg-text-primary hover:text-dark transition-all duration-300 rounded-sm"
               >
                 选择方案
@@ -865,7 +866,7 @@ export default function LandingPage() {
               </div>
 
               <button 
-                onClick={() => setSelectedPlan('ultimate')}
+                onClick={() => setShowBetaModal(true)}
                 className="w-full mb-6 px-8 py-3 bg-transparent border-2 border-text-primary text-text-primary hover:bg-text-primary hover:text-dark transition-all duration-300 rounded-sm"
               >
                 选择方案
@@ -1048,6 +1049,70 @@ export default function LandingPage() {
         onClose={() => setShowLoginModal(false)}
         onLoginSuccess={handleLoginSuccess}
       />
+
+      {/* 内测弹窗 */}
+      {showBetaModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* 背景遮罩 */}
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setShowBetaModal(false)}
+          />
+          
+          {/* 弹窗内容 */}
+          <div className="relative bg-dark-card border-2 border-primary/50 rounded-lg shadow-2xl max-w-lg w-full p-8 transform transition-all">
+            {/* 关闭按钮 */}
+            <button
+              onClick={() => setShowBetaModal(false)}
+              className="absolute top-4 right-4 text-text-tertiary hover:text-primary transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* 图标 */}
+            <div className="flex justify-center mb-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary/60 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* 标题 */}
+            <h3 className="text-3xl font-bold text-center mb-4 text-primary">
+              内测阶段
+            </h3>
+
+            {/* 内容 */}
+            <div className="text-center space-y-4 mb-6">
+              <p className="text-xl text-text-primary leading-relaxed">
+                请联系工作人员领取内测码
+              </p>
+              <p className="text-2xl font-bold text-primary animate-pulse">
+                🎉 免费试用 🎉
+              </p>
+              <p className="text-text-secondary">
+                内测期间，所有功能均可<span className="text-primary font-semibold">完全免费</span>使用
+              </p>
+            </div>
+
+            {/* 按钮 */}
+            <div className="space-y-3">
+              <button
+                onClick={() => setShowBetaModal(false)}
+                className="w-full px-6 py-3 bg-primary text-dark font-semibold hover:bg-primary/90 transition-all duration-300 rounded-sm"
+              >
+                我知道了
+              </button>
+              <p className="text-xs text-text-tertiary text-center">
+                如需内测码，请联系客服微信：<span className="text-primary">Formy_AI</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
