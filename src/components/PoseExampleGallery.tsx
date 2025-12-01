@@ -135,75 +135,83 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
       {/* Modal - Enlarged View */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-6"
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto"
           onClick={closeModal}
           onKeyDown={handleKeyDown}
           tabIndex={0}
         >
-          <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+          <div 
+            className="relative w-full max-w-5xl my-auto" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxHeight: 'calc(100vh - 2rem)' }}
+          >
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute -top-12 right-0 text-white hover:text-primary transition-colors"
+              className="absolute -top-10 right-0 text-white hover:text-primary transition-colors z-10"
             >
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            {/* Large 2x2 Grid - 3:4 比例适配全身照 */}
-            <div className="grid grid-cols-2 gap-4 bg-dark-card p-4 rounded-lg border border-dark-border">
+            {/* Large 2x2 Grid - 适配屏幕，确保完整显示 */}
+            <div className="grid grid-cols-2 gap-3 bg-dark-card p-3 rounded-lg border border-dark-border">
               {/* Origin - Top Left */}
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
+              <div className="relative overflow-hidden rounded-sm border border-dark-border bg-dark-card flex items-center justify-center" style={{ minHeight: '300px', maxHeight: 'calc((100vh - 200px) / 2)' }}>
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/origin.jpg`}
                   alt="Origin pose"
                   className="w-full h-full object-contain"
+                  style={{ maxHeight: '100%' }}
                 />
-                <div className="absolute top-3 left-3 px-3 py-1.5 bg-dark/90 text-white text-sm rounded">
+                <div className="absolute top-2 left-2 px-2 py-1 bg-dark/90 text-white text-xs rounded">
                   原图
                 </div>
               </div>
 
               {/* Image 1 - Top Right */}
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
+              <div className="relative overflow-hidden rounded-sm border border-dark-border bg-dark-card flex items-center justify-center" style={{ minHeight: '300px', maxHeight: 'calc((100vh - 200px) / 2)' }}>
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/1.png`}
                   alt="Pose 1"
                   className="w-full h-full object-contain"
+                  style={{ maxHeight: '100%' }}
                 />
-                <div className="absolute top-3 left-3 px-3 py-1.5 bg-primary/90 text-dark text-sm rounded">
+                <div className="absolute top-2 left-2 px-2 py-1 bg-primary/90 text-dark text-xs rounded">
                   效果1
                 </div>
               </div>
 
               {/* Image 2 - Bottom Left */}
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
+              <div className="relative overflow-hidden rounded-sm border border-dark-border bg-dark-card flex items-center justify-center" style={{ minHeight: '300px', maxHeight: 'calc((100vh - 200px) / 2)' }}>
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/2.png`}
                   alt="Pose 2"
                   className="w-full h-full object-contain"
+                  style={{ maxHeight: '100%' }}
                 />
-                <div className="absolute top-3 left-3 px-3 py-1.5 bg-primary/90 text-dark text-sm rounded">
+                <div className="absolute top-2 left-2 px-2 py-1 bg-primary/90 text-dark text-xs rounded">
                   效果2
                 </div>
               </div>
 
               {/* Image 3 - Bottom Right */}
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-dark-border bg-dark-card">
+              <div className="relative overflow-hidden rounded-sm border border-dark-border bg-dark-card flex items-center justify-center" style={{ minHeight: '300px', maxHeight: 'calc((100vh - 200px) / 2)' }}>
                 <img
                   src={`/Landing_Page_example_change_pose/${currentGroup}/3.png`}
                   alt="Pose 3"
                   className="w-full h-full object-contain"
+                  style={{ maxHeight: '100%' }}
                 />
-                <div className="absolute top-3 left-3 px-3 py-1.5 bg-primary/90 text-dark text-sm rounded">
+                <div className="absolute top-2 left-2 px-2 py-1 bg-primary/90 text-dark text-xs rounded">
                   效果3
                 </div>
               </div>
             </div>
 
             {/* Modal Navigation */}
-            <div className="flex items-center justify-center gap-6 mt-6">
+            <div className="flex items-center justify-center gap-6 mt-4">
               <button
                 onClick={handlePrevGroup}
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-dark-card border border-dark-border hover:border-primary hover:bg-primary/10 transition-all"
@@ -228,7 +236,7 @@ export default function PoseExampleGallery({ totalGroups }: PoseExampleGalleryPr
             </div>
 
             {/* Keyboard Hint */}
-            <div className="text-center mt-4 text-text-tertiary text-sm">
+            <div className="text-center mt-3 text-text-tertiary text-sm">
               使用 ← → 键切换 | ESC 关闭
             </div>
           </div>
