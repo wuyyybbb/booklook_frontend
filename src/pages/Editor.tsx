@@ -244,7 +244,7 @@ export default function Editor() {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-base">
               <div className="w-8 h-8 bg-primary rounded-sm"></div>
-              <span className="text-xl font-bold">Formy</span>
+              <span className="text-xl font-bold">Booklook</span>
             </Link>
             
             {/* Desktop Mode Tabs */}

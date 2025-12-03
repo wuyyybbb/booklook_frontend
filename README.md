@@ -1,8 +1,8 @@
-# Formy Frontend
+# Booklook Frontend
 
 ## 项目简介
 
-Formy 前端项目 - 基于 React + Vite + TypeScript + Tailwind CSS 构建的 AI 服装视觉创作工具。
+Booklook 前端项目 - 基于 React + Vite + TypeScript + Tailwind CSS 构建的 AI 服装视觉创作工具。
 
 ## 技术栈
 

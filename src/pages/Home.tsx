@@ -9,7 +9,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-sm"></div>
-              <span className="text-xl font-bold">Formy｜形我</span>
+              <span className="text-xl font-bold">Booklook｜形我</span>
             </div>
             <Link to="/editor" className="btn-primary">
               开始创作
@@ -104,7 +104,7 @@ export default function Home() {
         <div className="container-center">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-text-tertiary text-sm">
-              © 2025 Formy｜形我. All rights reserved.
+              © 2025 Booklook｜形我. All rights reserved.
             </div>
             <div className="flex gap-6 text-text-tertiary text-sm">
               <a href="#" className="hover:text-primary transition-base">关于我们</a>

@@ -157,7 +157,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
           {/* 标题 */}
           <h2 className="title-h2 text-center mb-2">
-            {step === 'email' ? '登录 Formy' : '输入验证码'}
+            {step === 'email' ? '登录 Booklook' : '输入验证码'}
           </h2>
           <p className="text-text-secondary text-center mb-8">
             {step === 'email' 

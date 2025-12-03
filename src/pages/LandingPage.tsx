@@ -136,9 +136,9 @@ export default function LandingPage() {
             {/* Logo */}
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/60 rounded-sm flex items-center justify-center">
-                <span className="text-dark font-bold text-xl">F</span>
+                <span className="text-dark font-bold text-xl">B</span>
               </div>
-              <span className="text-2xl font-bold tracking-tight">Formy</span>
+              <span className="text-2xl font-bold tracking-tight">Booklook</span>
             </div>
             
             {/* Nav */}
@@ -954,7 +954,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-primary rounded-sm"></div>
-              <span className="text-lg font-bold">Formy｜形我</span>
+              <span className="text-lg font-bold">Booklook｜形我</span>
             </div>
             <div className="flex gap-8 text-text-tertiary text-sm">
               <a href="#" className="hover:text-primary transition-base">关于我们</a>
@@ -964,7 +964,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="mt-8 text-center text-text-tertiary text-sm">
-            © 2025 Formy｜形我. All rights reserved.
+            © 2025 Booklook｜形我. All rights reserved.
           </div>
         </div>
       </footer>
@@ -1113,7 +1113,7 @@ export default function LandingPage() {
                 我知道了
               </button>
               <p className="text-xs text-text-tertiary text-center">
-                如需内测码，请联系客服微信：<span className="text-primary">Formy_AI</span>
+                如需内测码，请联系客服微信：<span className="text-primary">Booklook_AI</span>
               </p>
             </div>
           </div>

@@ -73,9 +73,9 @@ export default function FeatureSelection() {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-base">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/60 rounded-sm flex items-center justify-center">
-                <span className="text-dark font-bold text-xl">F</span>
+                <span className="text-dark font-bold text-xl">B</span>
               </div>
-              <span className="text-2xl font-bold tracking-tight">Formy</span>
+              <span className="text-2xl font-bold tracking-tight">Booklook</span>
             </Link>
             
             <Link to="/" className="btn-ghost">
